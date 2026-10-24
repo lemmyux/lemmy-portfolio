@@ -6,9 +6,9 @@ module.exports = {
   location: 'Lagos, Nigeria',
 
   story: [
-    "I'm Lemmy, a senior product designer based in Lagos, Nigeria. I design products across B2C and B2B software, conversational AI, fintech and Web3, for teams in India, Dubai, the UK and the US.",
-    'Most recently, I led product design at SOIN Global, a social intelligence and influencer marketplace for Web3 brands and creators. Alongside it, I took [Travon](https://claude.ai/artifact/TZV8JohBEuEKk5NEneYutP), a multi-chain meme coin trading terminal, from discovery to MVP.',
-    'Before that, I spent a year leading design at [Alpha Blockz](https://alphablockz.io/), a $100M Web3 incubator, shipping websites, design systems and investor decks that helped its startups raise {{$5M+}}. Over the same stretch I worked with Avinya Labs in Dubai on an AI-powered DeFi app and Telegram mini-games.',
+    "I'm Lemmy, a senior product designer based in Lagos, Nigeria. I design products across B2C and B2B software, conversational AI, fintech and crypto, for teams in India, Dubai, the UK and the US.",
+    'Most recently, I led product design at SOIN Global, a social intelligence and influencer marketplace for crypto brands and creators. Alongside it, I took [Travon](https://claude.ai/artifact/TZV8JohBEuEKk5NEneYutP), a multi-chain meme coin trading terminal, from discovery to MVP.',
+    'Before that, I spent a year leading design at [Alpha Blockz](https://alphablockz.io/), a $100M startup incubator, shipping websites, design systems and investor decks that helped its startups raise {{$5M+}}. Over the same stretch I worked with Avinya Labs in Dubai on an AI-powered crypto trading app and Telegram mini-games.',
     'I started in 2022 at BeCreative Agency, redesigning client websites, then moved into enterprise software at Hydrogen HR, working on HR, payroll and job board platforms. I studied Computer Science at the University of Nigeria, Nsukka.',
     "Altogether, the startups I've designed for have secured over {{$10M in funding}} and reached {{50k+ users}}.",
   ],
@@ -16,7 +16,7 @@ module.exports = {
   facts: [
     ['Based in', 'Lagos, Nigeria'],
     ['Designing since', '2022'],
-    ['Focus', 'AI, Fintech & Web3'],
+    ['Focus', 'B2B & B2C software, AI, Fintech & Crypto'],
     ['Status', 'Open to work'],
   ],
 
@@ -37,7 +37,7 @@ module.exports = {
       company: 'SOIN Global', role: 'Product Designer', place: 'India', dates: 'Jul 2025 – Jan 2026',
       summary: 'End-to-end design of a social intelligence and influencer marketplace platform, from discovery and UX architecture to high-fidelity UI and developer handoff.',
       points: [
-        'Researched Web3 analytics and growth platforms such as Cookie3 and Kaito, contributing to a {{30%}} improvement in feature clarity for first-time users.',
+        'Researched crypto analytics and growth platforms such as Cookie3 and Kaito, contributing to a {{30%}} improvement in feature clarity for first-time users.',
         'Designed analytics dashboards and profile systems for influencer performance, brand trust and campaign tracking, cutting user decision time by {{25%}}.',
         'Set up a modular design system and interaction patterns that made feature iteration {{40%}} faster.',
       ],
@@ -53,18 +53,18 @@ module.exports = {
     },
     {
       company: 'Alpha Blockz', role: 'Product Designer', place: 'British Virgin Islands (UK)', dates: 'Oct 2024 – Oct 2025',
-      summary: 'Design strategy and shared systems for a $100M Web3 incubator and its portfolio startups.',
+      summary: 'Design strategy and shared systems for a $100M startup incubator and its portfolio companies.',
       points: [
-        'Shipped consumer websites across Web3 gaming, AI and SocialFi, each with its own reusable design system.',
+        'Shipped consumer websites across gaming, AI and social apps, each with its own reusable design system.',
         'Created investor-ready pitch decks and product narratives that supported {{$5M+}} in secured capital.',
         'Improved delivery speed and cross-project alignment by {{30%+}} through centralised design leadership.',
       ],
     },
     {
       company: 'Avinya Labs', role: 'UI/UX Designer', place: 'Dubai', dates: 'Sep 2024 – May 2025',
-      summary: 'Product design across 6+ teams in a startup incubator, from an AI-powered on-chain DeFi app to consumer gaming products.',
+      summary: 'Product design across 6+ teams in a startup incubator, from an AI-powered crypto trading app to consumer gaming products.',
       points: [
-        'Led UX/UI for Telegram mini-games and Web3 casino experiences, driving a {{65%}} increase in engagement and {{30%}} growth in daily active users.',
+        'Led UX/UI for Telegram mini-games and crypto casino games, driving a {{65%}} increase in engagement and {{30%}} growth in daily active users.',
         'Acted as project manager across design, engineering and marketing, reducing cycle time by {{25%+}}.',
       ],
     },
