@@ -1,0 +1,477 @@
+<title>Lemmy Jnr Portfolio B</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Lemmy Jnr, Senior Product Designer across AI, Fintech and Web3.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Instrument+Sans:wght@400;500&display=swap">
+<style>
+/* Layout: Ace-style studio sheet. Sticky uppercase manifesto on the left, indexed sections (works grid, client strip, contact) on the right. Single dark look, from the 925 Figma frame. */
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --line: #1a1a1a;
+  --fg: #ffffff;
+  --muted: #a1a1a3;
+  --dim: #5c5c5c;
+  --accent: #00c0e8;
+  --ink: #0b0b0f;
+  --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Fragment Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Top bar */
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: flex; height: 58px; background: var(--bg); border-bottom: 1px solid var(--line); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+.seg { display: flex; align-items: center; gap: 22px; padding-inline: 20px; border-right: 1px solid var(--line); white-space: nowrap; }
+.wordmark { font-weight: 500; font-size: 20px; letter-spacing: -0.01em; }
+.status { gap: 10px; font-size: 12px; font-weight: 500; text-transform: uppercase; line-height: 1.2; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 2.4s ease-in-out infinite; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 0%, transparent), 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); } }
+.nav { border-right: 0; font-size: 13px; font-weight: 500; }
+.nav a { color: var(--muted); transition: color .15s; }
+.nav a:hover, .nav a[aria-current] { color: var(--fg); }
+.spacer { flex: 1; }
+.clock { font-family: var(--mono); font-size: 15px; padding-inline: 24px; border-left: 1px solid var(--line); border-right: 0; font-variant-numeric: tabular-nums; }
+
+/* Body */
+.body { display: grid; grid-template-columns: minmax(0, 592px) minmax(0, 728px); padding-right: max(120px, env(safe-area-inset-right, 0px)); max-width: 1440px; margin-inline: auto; }
+.side-inner { position: sticky; top: calc(58px + env(safe-area-inset-top, 0px)); min-height: calc(100vh - 58px); display: flex; flex-direction: column; justify-content: space-between; gap: 36px; padding: 88px 56px 40px; padding-left: max(56px, env(safe-area-inset-left, 0px)); }
+.hero { display: flex; flex-direction: column; gap: 32px; max-width: 536px; }
+/* The intro column is taller than a short laptop screen; let it scroll with the page there instead of pinning its buttons out of view. */
+@media (max-height: 960px) { .side-inner { position: static; } }
+h1 { margin: 0; font-weight: 500; font-size: 52px; line-height: 1.1; letter-spacing: -0.03em; text-transform: uppercase; }
+h1 .lead { color: var(--accent); display: block; }
+.intro { display: flex; flex-direction: column; gap: 14px; max-width: 462px; }
+.intro p { margin: 0; font-size: 16px; line-height: 1.5; color: var(--muted); }
+.metric { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); font-weight: 500; padding: 1px 6px; border-radius: 2px; white-space: nowrap; }
+.client { color: var(--fg); font-weight: 500; text-decoration: underline; text-decoration-color: #3a3a3a; text-underline-offset: 4px; transition: text-decoration-color .15s; }
+.client:hover { text-decoration-color: var(--accent); }.pinned { display: flex; flex-direction: column; gap: 14px; max-width: 448px; }
+.pinned p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding-top: 22px; }
+.button { display: flex; align-items: center; justify-content: space-between; height: 40px; padding-inline: 16px; font-size: 14px; border: 1px solid var(--fg); font-family: inherit; cursor: pointer; transition: background .15s, color .15s; }
+.button.accent { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+.button.accent:hover { background: var(--fg); border-color: var(--fg); }
+.button.outline { background: transparent; color: var(--fg); }
+.button.outline:hover { background: var(--fg); color: var(--ink); }
+
+.content { display: flex; flex-direction: column; gap: 120px; padding-block: 56px 120px; min-width: 0; }
+.label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); line-height: 1.2; }
+.section { display: flex; flex-direction: column; gap: 40px; }
+.works { display: grid; grid-template-columns: 1fr 1fr; gap: 48px 16px; }
+.work { display: flex; flex-direction: column; gap: 6px; }
+.work .frame { overflow: hidden; margin-bottom: 22px; aspect-ratio: 16 / 10; max-width: 100%; background: #0d0d0d; }
+.work img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50% 50%); transform: scale(var(--z, 1)); transform-origin: var(--pos, 50% 50%); transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.work:hover img { transform: scale(calc(var(--z, 1) * 1.04)); }.work strong { font-family: var(--mono); font-weight: 400; font-size: 14px; line-height: 1.3; letter-spacing: .06em; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s, color .2s; }
+.work strong .ico { width: 14px; height: 14px; color: var(--dim); }
+.work:hover strong .ico { color: var(--accent); transform: translate(2px, -2px); }
+.button:hover .ico.up { transform: translate(2px, -2px); }
+.button:hover .ico.right { transform: translateX(3px); }
+.work small { font-size: 14px; line-height: 1.5; color: var(--muted); }
+.strip { border: 1px solid var(--line); height: 84px; overflow: hidden; display: flex; align-items: center; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.marquee { display: flex; gap: 56px; padding-inline: 28px; white-space: nowrap; animation: slide 28s linear infinite; }
+.marquee b { font-weight: 500; font-size: 22px; letter-spacing: -0.02em; line-height: 1.2; }
+@keyframes slide { to { transform: translateX(-50%); } }
+.cta { display: flex; flex-direction: column; gap: 20px; }
+.cta h2 { margin: 0; font-weight: 500; font-size: 52px; line-height: 1.1; letter-spacing: -0.03em; text-transform: uppercase; text-wrap: balance; }
+.chip { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; padding: 4px 8px; background: var(--fg); color: var(--ink); font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; line-height: 1.2; }
+.chip i { width: 6px; height: 6px; background: var(--ink); }
+.cta p { margin: 0; font-size: 16px; line-height: 1.5; color: var(--muted); }
+.cta a, .cta button { color: var(--accent); }
+.cta button { all: unset; cursor: pointer; color: var(--fg); text-decoration: underline; text-decoration-color: #333; text-underline-offset: 4px; }
+.cta button:hover { text-decoration-color: var(--accent); }
+.footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-top: 20px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.footer a:hover { color: var(--fg); }
+
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px); background: var(--accent); color: var(--ink); font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; padding: 10px 14px; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 1180px) { .body { padding-right: max(40px, env(safe-area-inset-right, 0px)); } .status { display: none; } }
+@media (max-width: 900px) {
+  .body { grid-template-columns: 1fr; padding-right: 0; }
+  .side-inner { position: static; min-height: 0; padding: 56px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px)); }
+  .content { padding: 48px max(16px, env(safe-area-inset-right, 0px)) 64px max(16px, env(safe-area-inset-left, 0px)); gap: 80px; }
+  h1, .cta h2 { font-size: clamp(34px, 9vw, 52px); }
+  .spacer, .clock { display: none; }
+  .nav { gap: 16px; padding-inline: 16px; overflow-x: auto; }
+  .seg:first-child { padding-left: max(16px, env(safe-area-inset-left, 0px)); }
+}
+@media (max-width: 520px) { .works, .buttons { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Cyber FX: boot loader and hover glitch. Colours come from the page's own --accent. */
+:root { --fx-alt: #ff2bd6; }
+.fx-boot { position: fixed; inset: 0; z-index: 100; display: flex; align-items: flex-end; background: var(--bg); color: var(--muted); font-family: var(--mono); font-size: 13px; line-height: 1.8; cursor: pointer; padding: max(24px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) max(40px, env(safe-area-inset-bottom, 0px)) max(24px, env(safe-area-inset-left, 0px)); transition: transform .55s cubic-bezier(.7,0,.3,1); animation: fx-boot-failsafe 0s 3s forwards; }
+.fx-boot::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--accent); box-shadow: 0 0 18px var(--accent); opacity: 0; transition: opacity .15s; }
+.fx-boot.out { transform: translateY(-100%); pointer-events: none; }
+.fx-boot.out::after { opacity: 1; }
+.fx-boot-inner { width: min(560px, 100%); }
+.fx-boot-line { min-height: 1.8em; white-space: pre; overflow: hidden; text-overflow: clip; }
+.fx-boot-line:first-child { color: var(--fg); }
+.fx-boot-line.ok { color: var(--accent); }
+.fx-boot-bar { margin-top: 16px; height: 2px; background: color-mix(in srgb, var(--fg) 12%, transparent); }
+.fx-boot-bar i { display: block; width: 0; height: 100%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+.fx-boot-skip { margin-top: 12px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+@keyframes fx-boot-failsafe { to { visibility: hidden; } }
+
+
+.fx-glitch { position: relative; display: inline-block; }
+.fx-glitch::before, .fx-glitch::after { content: attr(data-text); position: absolute; inset: 0; opacity: 0; pointer-events: none; white-space: nowrap; }
+.fx-glitch::before { color: var(--accent); }
+.fx-glitch::after { color: var(--fx-alt); }
+a:hover .fx-glitch::before, a:focus-visible .fx-glitch::before, .giant:hover .fx-glitch::before { animation: fx-glitch-a .38s steps(1) 1; }
+a:hover .fx-glitch::after, a:focus-visible .fx-glitch::after, .giant:hover .fx-glitch::after { animation: fx-glitch-b .38s steps(1) 1; }
+@keyframes fx-glitch-a { 0% { opacity: 1; clip-path: inset(12% 0 58% 0); transform: translate(-3px, -1px); } 30% { opacity: 1; clip-path: inset(58% 0 14% 0); transform: translate(3px, 1px); } 60% { opacity: 1; clip-path: inset(34% 0 40% 0); transform: translate(-2px, 0); } 100% { opacity: 0; } }
+@keyframes fx-glitch-b { 0% { opacity: 1; clip-path: inset(62% 0 10% 0); transform: translate(3px, 1px); } 30% { opacity: 1; clip-path: inset(8% 0 66% 0); transform: translate(-3px, -1px); } 60% { opacity: 1; clip-path: inset(44% 0 30% 0); transform: translate(2px, 0); } 100% { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-boot { display: none; }
+  .fx-glitch::before, .fx-glitch::after { display: none; }
+}
+
+/* Sound toggle (bottom-right). */
+.fx-sound { position: fixed; z-index: 60; right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; background: color-mix(in srgb, var(--bg) 85%, transparent); color: var(--fg); border: 1px solid var(--line); font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; line-height: 1.2; cursor: pointer; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: border-color .15s, color .15s; }
+.fx-sound:hover { border-color: var(--accent); }
+.fx-sound:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.fx-sound svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.fx-sound .waves { transition: opacity .15s; }
+.fx-sound.off { color: var(--muted); }
+.fx-sound.off .waves { opacity: 0; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></symbol>
+</svg>
+
+<div class="fx-boot" id="fx-boot" role="presentation" aria-hidden="true">
+  <div class="fx-boot-inner">
+    <div class="fx-boot-line">&gt; lemmy.jnr // portfolio</div>
+    <div class="fx-boot-line">&gt; senior product designer: ai, fintech, web3</div>
+    <div class="fx-boot-line">&gt; loading case studies ............ 4/4</div>
+    <div class="fx-boot-line ok">&gt; status: open to work</div>
+    <div class="fx-boot-bar"><i></i></div>
+    <div class="fx-boot-skip">Click to skip</div>
+  </div>
+</div>
+<script>try { if (sessionStorage.getItem('fx-booted') || matchMedia('(prefers-reduced-motion: reduce)').matches) { var fxb = document.getElementById('fx-boot'); fxb.parentNode.removeChild(fxb); } } catch (e) {}</script>
+
+<button class="fx-sound" id="fx-sound" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z"/><path class="waves" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg><span>Sound on</span></button>
+<header class="topbar">
+  <div class="seg"><a class="wordmark" href="#top">Lemmy Jnr</a></div>
+  <div class="seg status"><span class="dot" aria-hidden="true"></span>Senior Product Designer · AI, Fintech &amp; Web3</div>
+  <nav class="seg nav" aria-label="Main">
+    <a href="#works" aria-current="page">Work</a>
+    <a href="#top">About</a>
+    <a href="https://drive.google.com/file/d/1aKHTNvx0FsJgjQCnflHkWIIyESehs_f0/view?usp=drive_link" target="_blank" rel="noopener">Resume</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="spacer"></div>
+  <div class="seg clock" id="clock" aria-label="Local time">9:25 AM</div>
+</header>
+
+<main class="body" id="top">
+  <aside class="side">
+    <div class="side-inner">
+      <div class="hero">
+        <h1><span class="lead">Senior Product</span> Designer For AI, Fintech &amp; Web3</h1>
+        <div class="intro">
+          <p>I'm Lemmy, a Senior Designer with experience designing products across B2C/B2B software, Conversational AI, Fintech, and Web3.</p>
+          <p>I've led product design for startups whose products have secured over <mark class="metric">$10M in funding</mark> and collectively reached <mark class="metric">50k+ users</mark>.</p>
+          <p>Clients include <a class="client" href="https://www.holcim.com/" target="_blank" rel="noopener">Holcim</a>, <a class="client" href="https://redacted.tenset.io/" target="_blank" rel="noopener">Tenset 2.0</a>, <a class="client" href="https://claude.ai/artifact/TZV8JohBEuEKk5NEneYutP" target="_blank" rel="noopener">Travon trading terminal</a> and <a class="client" href="https://alphablockz.io/" target="_blank" rel="noopener">Alphablockz</a>.</p>
+        </div>
+      </div>
+      <div class="pinned">
+        <p>Open to full-time roles and freelance projects. If you're building something ambitious, I'd love to hear from you.</p>
+        <div class="buttons">
+          <a class="button accent" href="book.html">Book a call <svg class="ico up" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="button outline" href="mailto:ugochukwuokongwu3@gmail.com" data-copy="ugochukwuokongwu3@gmail.com">Email me <svg class="ico right" aria-hidden="true"><use href="#i-right"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="content">
+    <section class="section" id="works" aria-labelledby="works-label">
+      <div class="label"><span id="works-label">Works</span></div>
+      <div class="works">
+        <a class="work" href="work/rana.html">
+          <div class="frame" style="--pos: 50% 50%"><img src="img/rana.jpg" alt="Rana Mental Wellness screens on three phones: mood history, mood insight and quick journal" width="2000" height="1188"></div>
+          <strong>Rana <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></strong><small>Mobile App / Wellness / USA</small>
+        </a>
+        <a class="work" href="work/soin-attention-market.html">
+          <div class="frame" style="--pos: 50% 30%"><img src="img/soin-attention.jpg" alt="SOIN Attention Market creator metrics dashboard" width="2400" height="1706"></div>
+          <strong>SOIN Attention <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></strong><small>AI Intelligence / Web3 / India</small>
+        </a>
+        <a class="work" href="work/vitashield.html">
+          <div class="frame" style="--pos: 50% 35%"><img src="img/vitashield.jpg" alt="VitaShield website hero" width="2400" height="1706" loading="lazy"></div>
+          <strong>VitaShield <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></strong><small>Website / Trust Infra / UK</small>
+        </a>
+        <a class="work" href="work/soin-talent-marketplace.html">
+          <div class="frame" style="--pos: 50% 25%"><img src="img/soin-talent.jpg" alt="SOIN Talent Marketplace influencer profile dashboard" width="2000" height="1279" loading="lazy"></div>
+          <strong>SOIN Talent Marketplace <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></strong><small>AI Talent Marketplace / Web3 / India</small>
+        </a>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="clients-label">
+      <div class="label"><span id="clients-label">Clients</span></div>
+      <div class="strip">
+        <div class="marquee">
+          <b>Holcim</b><b>Tenset 2.0</b><b>Travon</b><b>Alphablockz</b><b>SOIN Global</b><b>VitaShield</b><b>Rana</b><b>BoG Intelligence</b>
+          <b aria-hidden="true">Holcim</b><b aria-hidden="true">Tenset 2.0</b><b aria-hidden="true">Travon</b><b aria-hidden="true">Alphablockz</b><b aria-hidden="true">SOIN Global</b><b aria-hidden="true">VitaShield</b><b aria-hidden="true">Rana</b><b aria-hidden="true">BoG Intelligence</b>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="contact" aria-labelledby="cta-h">
+      <h2 id="cta-h">Have a product in mind?</h2>
+      <span class="chip"><i aria-hidden="true"></i>$10M+ raised · 50k+ users</span>
+      <p>Tell me about your product, whether it's a new MVP, a redesign, or a design system.</p>
+      <p><a href="book.html">Book a 30-minute call</a> or <a href="mailto:ugochukwuokongwu3@gmail.com" data-copy="ugochukwuokongwu3@gmail.com">email me</a></p>
+      <p>Reach me at <button type="button" data-copy="ugochukwuokongwu3@gmail.com" aria-label="Copy email address">ugochukwuokongwu3@gmail.com</button></p>
+    </section>
+
+    <footer class="footer">
+      <span>© 2026 Lemmy Jnr</span>
+      <a href="https://www.linkedin.com/in/ugochukwu-lemmy-1ab9521b3/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://x.com/lemmyux" target="_blank" rel="noopener">X</a>
+      <a href="https://dribbble.com/Lemmyux" target="_blank" rel="noopener">Dribbble</a>
+    </footer>
+  </div>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var clock = document.getElementById('clock');
+  function tick() { clock.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }
+  tick(); setInterval(tick, 15000);
+  var toast = document.getElementById('toast'), t;
+  function show(msg) { toast.textContent = msg; toast.classList.add('on'); clearTimeout(t); t = setTimeout(function () { toast.classList.remove('on'); }, 2200); }
+  document.querySelectorAll('[data-copy]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var v = el.getAttribute('data-copy');
+      try { navigator.clipboard.writeText(v).then(function () { show('Email copied'); }, function () { show(v); }); }
+      catch (e) { show(v); }
+    });
+  });
+})();
+</script>
+
+<script>
+/* Cyber FX: boot sequence, headline decode, hover scramble and glitch. */
+(function () {
+  var cfg = { glitch: '.work strong', scramble: '.nav a, .button' };
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var GLYPHS = '!<>-_\\/[]{}=+*^?#%&01XZ';
+  function glyph() { return GLYPHS[Math.floor(Math.random() * GLYPHS.length)]; }
+  function textNodes(el) {
+    var out = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    while (w.nextNode()) if (w.currentNode.nodeValue.trim()) out.push(w.currentNode);
+    return out;
+  }
+
+  // Reveal an element's text left to right; unrevealed characters cycle through glyphs.
+  function scramble(el, duration) {
+    if (reduce || el._fxBusy) return;
+    var nodes = textNodes(el);
+    if (!nodes.length) return;
+    el._fxBusy = true;
+    var originals = nodes.map(function (n) { return n.nodeValue; });
+    var total = originals.join('').length, start = performance.now();
+    function frame(now) {
+      var p = Math.min(1, (now - start) / duration), revealed = Math.floor(p * total), seen = 0;
+      nodes.forEach(function (n, i) {
+        var s = originals[i], out = '';
+        for (var c = 0; c < s.length; c++, seen++) out += (seen < revealed || /\s/.test(s[c])) ? s[c] : glyph();
+        n.nodeValue = out;
+      });
+      if (p < 1) requestAnimationFrame(frame);
+      else { nodes.forEach(function (n, i) { n.nodeValue = originals[i]; }); el._fxBusy = false; }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // Hover scramble on nav links and buttons; width is held so nothing around them shifts.
+  document.querySelectorAll(cfg.scramble).forEach(function (el) {
+    function run() {
+      if (el._fxBusy) return;
+      el.style.minWidth = el.offsetWidth + 'px';
+      scramble(el, 420);
+      setTimeout(function () { el.style.minWidth = ''; }, 460);
+    }
+    el.addEventListener('mouseenter', run);
+    el.addEventListener('focus', run);
+  });
+
+  // Glitch layers: wrap the first text run of each target in a span the CSS can split.
+  document.querySelectorAll(cfg.glitch).forEach(function (el) {
+    var t = textNodes(el)[0];
+    if (!t) return;
+    var raw = t.nodeValue, text = raw.trim(), lead = raw.slice(0, raw.indexOf(text)), tail = raw.slice(raw.indexOf(text) + text.length);
+    var span = document.createElement('span');
+    span.className = 'fx-glitch';
+    span.setAttribute('data-text', text);
+    span.textContent = text;
+    var frag = document.createDocumentFragment();
+    if (lead) frag.appendChild(document.createTextNode(lead));
+    frag.appendChild(span);
+    if (tail) frag.appendChild(document.createTextNode(tail));
+    t.parentNode.replaceChild(frag, t);
+  });
+
+  function decodeHeadline() {
+    var h = document.querySelector('h1');
+    if (!h || reduce) return;
+    h.setAttribute('aria-label', h.textContent.replace(/\s+/g, ' ').trim());
+    h.style.minHeight = h.offsetHeight + 'px';
+    scramble(h, 1000);
+    setTimeout(function () { h.style.minHeight = ''; h.removeAttribute('aria-label'); }, 1100);
+  }
+
+  // Boot sequence: type the lines, fill the bar, then wipe upward on its own. Plays once per visit.
+  var boot = document.getElementById('fx-boot');
+  if (!boot) { decodeHeadline(); return; }
+  var lines = [].slice.call(boot.querySelectorAll('.fx-boot-line'));
+  var texts = lines.map(function (l) { return l.textContent; });
+  var bar = boot.querySelector('.fx-boot-bar i');
+  lines.forEach(function (l) { l.textContent = ''; });
+  var t0 = performance.now(), D = 950, done = false;
+  function finish() {
+    if (done) return;
+    done = true;
+    try { sessionStorage.setItem('fx-booted', '1'); } catch (e) {}
+    lines.forEach(function (l, i) { l.textContent = texts[i]; });
+    bar.style.width = '100%';
+    boot.classList.add('out');
+    setTimeout(function () { if (boot.parentNode) boot.parentNode.removeChild(boot); }, 650);
+    setTimeout(decodeHeadline, 120);
+  }
+  function step(now) {
+    if (done) return;
+    var p = Math.min(1, (now - t0) / D);
+    bar.style.width = (p * 100) + '%';
+    lines.forEach(function (l, i) {
+      var lp = Math.max(0, Math.min(1, p * lines.length - i * 0.8));
+      l.textContent = texts[i].slice(0, Math.round(lp * texts[i].length));
+    });
+    if (p < 1) requestAnimationFrame(step); else setTimeout(finish, 200);
+  }
+  requestAnimationFrame(step);
+  setTimeout(finish, 2200); // finish even if animation frames are paused (e.g. a background tab)
+  boot.addEventListener('click', finish);
+  window.addEventListener('keydown', finish, { once: true });
+  boot.addEventListener('click', finish);
+  window.addEventListener('keydown', function (e) {
+    if (done || e.key === 'Tab') return;
+    if (document.activeElement === muteBtn && (e.key === 'Enter' || e.key === ' ')) return;
+    finish();
+  });
+})();
+</script>
+
+<script>
+/* UI sounds: synthesised taps and hover ticks, no audio files. Browsers only allow audio after the first click or key press. */
+(function () {
+  var KEY = 'fx-sound', on = true;
+  try { on = localStorage.getItem(KEY) !== 'off'; } catch (e) {}
+  var btn = document.getElementById('fx-sound');
+  var ctx = null, master = null, noise = null, lastHover = 0, hovered = null;
+
+  function init() {
+    if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return; }
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    ctx = new AC();
+    master = ctx.createGain();
+    master.gain.value = 0.18;
+    var soften = ctx.createBiquadFilter(); // rounds off any sharp edge
+    soften.type = 'lowpass';
+    soften.frequency.value = 1800;
+    master.connect(soften);
+    soften.connect(ctx.destination);
+    noise = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.1), ctx.sampleRate);
+    var d = noise.getChannelData(0);
+    for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  }
+
+  // Each sound is a high-passed noise tick plus a short sine "body", both fading out within milliseconds.
+  function blip(o) {
+    if (!on || !ctx || ctx.state === 'closed') return;
+    var t = ctx.currentTime + 0.002;
+    if (o.noise) {
+      var src = ctx.createBufferSource(), hp = ctx.createBiquadFilter(), g = ctx.createGain();
+      src.buffer = noise;
+      hp.type = 'highpass';
+      hp.frequency.setValueAtTime(o.hp, t);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(o.noise, t + 0.0003);
+      g.gain.setTargetAtTime(0.0001, t + 0.0003, o.nDecay);
+      src.connect(hp); hp.connect(g); g.connect(master);
+      src.start(t); src.stop(t + 0.1);
+    }
+    if (o.tone) {
+      var osc = ctx.createOscillator(), og = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(o.freq, t);
+      if (o.drop) osc.frequency.exponentialRampToValueAtTime(o.drop, t + (o.glide || 0.06));
+      og.gain.setValueAtTime(0.0001, t);
+      var a = o.attack || 0.0006;
+      og.gain.linearRampToValueAtTime(o.tone, t + a);
+      og.gain.setTargetAtTime(0.0001, t + a, o.tDecay);
+      osc.connect(og); og.connect(master);
+      osc.start(t); osc.stop(t + 0.15);
+    }
+  }
+
+  // Soft, rounded pops: low sine tones with a gentle fade-in and a small downward glide, no noise hiss.
+  var SOUNDS = {
+    hover: { tone: 0.09, freq: 620, drop: 540, glide: 0.04, attack: 0.006, tDecay: 0.012 },
+    tap:   { tone: 0.28, freq: 440, drop: 330, glide: 0.05, attack: 0.004, tDecay: 0.018 },
+    press: { tone: 0.3, freq: 360, drop: 250, glide: 0.06, attack: 0.004, tDecay: 0.024 }
+  };
+  function play(name) { blip(SOUNDS[name]); }
+
+  document.addEventListener('pointerover', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    var el = e.target.closest('a, button');
+    if (!el || el === hovered) return;
+    hovered = el;
+    var now = performance.now();
+    if (now - lastHover < 45) return;
+    lastHover = now;
+    play('hover');
+  });
+  document.addEventListener('pointerout', function (e) {
+    if (hovered && !hovered.contains(e.relatedTarget)) hovered = null;
+  });
+  document.addEventListener('pointerdown', function (e) {
+    init();
+    var el = e.target.closest('a, button, .fx-boot');
+    if (!el) return;
+    play(el.matches('.btn, .button, [data-copy], .fx-sound') ? 'press' : 'tap');
+  }, true);
+  document.addEventListener('keydown', function (e) {
+    init();
+    var a = document.activeElement;
+    if ((e.key === 'Enter' || e.key === ' ') && a && a.closest && a.closest('a, button')) play('tap');
+  }, true);
+
+  function render() {
+    btn.querySelector('span').textContent = on ? 'Sound on' : 'Sound off';
+    btn.classList.toggle('off', !on);
+  }
+  btn.addEventListener('click', function () {
+    on = !on;
+    try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch (e) {}
+    render();
+    if (on) { init(); play('press'); }
+  });
+  render();
+})();
+</script>

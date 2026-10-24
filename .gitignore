@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+
+# Vercel project links (per machine) and build output made by website/vercel/build.sh
+.vercel/
+website/vercel/lemmy-portfolio-*/
