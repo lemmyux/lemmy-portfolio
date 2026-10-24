@@ -662,7 +662,7 @@ function thumb(rel) {
 
 // Gallery items: extras first, then the case study screens interleaved across projects so the grid mixes them.
 function galleryItems() {
-  const extras = gallery.extras.map(x => ({ rel: 'gallery/' + x.src, title: x.title, alt: x.alt || x.title, type: x.type || 'Other', meta: x.year ? String(x.year) : '' }));
+  const extras = gallery.extras.map(x => ({ rel: 'gallery/' + x.src, title: x.title, alt: x.alt || x.title, type: x.type || 'Other', meta: [x.project, x.year].filter(Boolean).join(', ') }));
   const lists = projects.map(p => [[p.hero.src, p.hero.alt, 'Cover'], ...p.groups.flatMap(g => g.shots.map(([f, alt]) => [f, alt, g.name]))]
     .filter(([f]) => !gallery.skip.includes(p.slug + '/' + f))
     .map(([f, alt, name]) => ({ rel: `work/${p.slug}/${f}`, title: name, alt, type: gallery.caseStudies[p.slug] || 'Other', meta: p.title, href: `work/${p.slug}.html` })));
@@ -670,7 +670,9 @@ function galleryItems() {
   for (let i = 0; lists.some(l => i < l.length); i++) lists.forEach(l => { if (l[i]) mixed.push(l[i]); });
   return [...extras, ...mixed].map(it => {
     const d = dims(path.join(WEBSITE, 'img', it.rel));
-    return { ...it, w: d.w, h: d.h, tall: d.h / d.w > 2, thumb: thumb(it.rel) };
+    // Full-page website shots are taller than 2.4:1; single phone screens (about 2.2:1) get a device-style tile instead.
+    const r = d.h / d.w;
+    return { ...it, w: d.w, h: d.h, tall: r > 2.4, phone: r > 1.6 && r <= 2.4, thumb: thumb(it.rel) };
   });
 }
 
@@ -683,7 +685,7 @@ function galleryPage(site, items) {
     const r = it.h / it.w;
     const pan = it.tall ? ` style="--shift: -${((1 - TALL / r) * 100).toFixed(2)}%; --pan: ${(r * 1.6).toFixed(1)}s"` : '';
     return `
-    <button class="tile${it.tall ? ' tall' : ''}" type="button" data-type="${esc(it.type)}" data-ratio="${(it.tall ? TALL : r).toFixed(3)}" data-full="img/${esc(it.rel)}" data-title="${esc(it.title)}" data-meta="${esc([it.meta, it.type].filter(Boolean).join(' · '))}" data-alt="${esc(it.alt)}"${it.href ? ` data-href="${it.href}"` : ''} aria-label="${esc(it.title)}: ${esc(it.alt)}">
+    <button class="tile${it.tall ? ' tall' : it.phone ? ' phone' : ''}" type="button" data-type="${esc(it.type)}" data-ratio="${(it.tall || it.phone ? TALL : r).toFixed(3)}" data-full="img/${esc(it.rel)}" data-title="${esc(it.title)}" data-meta="${esc([it.meta, it.type].filter(Boolean).join(' · '))}" data-alt="${esc(it.alt)}"${it.href ? ` data-href="${it.href}"` : ''} aria-label="${esc(it.title)}: ${esc(it.alt)}">
       <span class="shot"${pan}><img src="${it.thumb}" alt="${esc(it.alt)}" width="${it.w}" height="${it.h}"${i < 6 ? '' : ' loading="lazy"'} decoding="async">${it.tall ? '<span class="badge">Full page</span>' : ''}</span>
       <span class="cap"><span>${esc(it.title)}</span><small>${esc([it.meta, it.type].filter(Boolean).join(' · '))}</small></span>
     </button>`;
@@ -748,6 +750,9 @@ h1 { margin: 18px 0 16px; font-weight: 500; font-size: clamp(48px, 7vw, 104px); 
 .tile.tall .shot { aspect-ratio: 4 / 5; }
 .tile.tall .shot img { transition: transform var(--pan) linear; }
 .tile.tall:hover .shot img, .tile.tall:focus-visible .shot img { transform: translateY(var(--shift)); transition-duration: var(--pan); }
+.tile.phone .shot { aspect-ratio: 4 / 5; background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--accent) 14%, #141416), #0b0b0c 70%); }
+.tile.phone .shot img { position: absolute; inset: 5% 0; margin: auto; width: auto; height: 90%; border-radius: 16px; box-shadow: 0 18px 40px -12px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.06); }
+.tile.phone:hover .shot img { transform: translateY(-6px); }
 .badge { position: absolute; top: 10px; left: 10px; padding: 5px 8px; background: color-mix(in srgb, var(--bg) 80%, transparent); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border-radius: 2px; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--fg); }
 .cap { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 0 4px 2px; }
 .cap span { overflow: hidden; font-size: 14px; font-weight: 500; white-space: nowrap; text-overflow: ellipsis; }
@@ -765,6 +770,7 @@ h1 { margin: 18px 0 16px; font-weight: 500; font-size: clamp(48px, 7vw, 104px); 
 .lb-stage { flex: 1; min-height: 0; display: flex; justify-content: center; align-items: center; overflow: auto; overscroll-behavior: contain; padding: 24px; }
 .lb-stage img { display: block; max-width: min(1400px, 100%); max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: max(0px, calc(var(--panel-r) - 4px)); }
 .lb-stage.tall { align-items: flex-start; }
+.lb-stage.phone img { border-radius: 24px; }
 .lb-stage.tall img { width: min(1100px, 100%); max-width: none; max-height: none; }
 .lb-cap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; padding: 14px max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); border-top: 1px solid var(--line); }
 .lb-cap strong { font-weight: 500; font-size: 16px; }
@@ -884,6 +890,7 @@ ${soundBtn}
     var t = visible[at];
     img.src = t.dataset.full; img.alt = t.dataset.alt;
     stage.classList.toggle('tall', t.classList.contains('tall'));
+    stage.classList.toggle('phone', t.classList.contains('phone'));
     stage.scrollTop = 0;
     document.getElementById('lb-count').textContent = (at + 1) + ' / ' + visible.length;
     document.getElementById('lb-title').textContent = t.dataset.title;

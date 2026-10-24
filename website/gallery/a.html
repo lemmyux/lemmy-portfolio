@@ -67,6 +67,9 @@ h1 { margin: 18px 0 16px; font-weight: 500; font-size: clamp(48px, 7vw, 104px); 
 .tile.tall .shot { aspect-ratio: 4 / 5; }
 .tile.tall .shot img { transition: transform var(--pan) linear; }
 .tile.tall:hover .shot img, .tile.tall:focus-visible .shot img { transform: translateY(var(--shift)); transition-duration: var(--pan); }
+.tile.phone .shot { aspect-ratio: 4 / 5; background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--accent) 14%, #141416), #0b0b0c 70%); }
+.tile.phone .shot img { position: absolute; inset: 5% 0; margin: auto; width: auto; height: 90%; border-radius: 16px; box-shadow: 0 18px 40px -12px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.06); }
+.tile.phone:hover .shot img { transform: translateY(-6px); }
 .badge { position: absolute; top: 10px; left: 10px; padding: 5px 8px; background: color-mix(in srgb, var(--bg) 80%, transparent); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border-radius: 2px; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--fg); }
 .cap { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 0 4px 2px; }
 .cap span { overflow: hidden; font-size: 14px; font-weight: 500; white-space: nowrap; text-overflow: ellipsis; }
@@ -84,6 +87,7 @@ h1 { margin: 18px 0 16px; font-weight: 500; font-size: clamp(48px, 7vw, 104px); 
 .lb-stage { flex: 1; min-height: 0; display: flex; justify-content: center; align-items: center; overflow: auto; overscroll-behavior: contain; padding: 24px; }
 .lb-stage img { display: block; max-width: min(1400px, 100%); max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: max(0px, calc(var(--panel-r) - 4px)); }
 .lb-stage.tall { align-items: flex-start; }
+.lb-stage.phone img { border-radius: 24px; }
 .lb-stage.tall img { width: min(1100px, 100%); max-width: none; max-height: none; }
 .lb-cap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; padding: 14px max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); border-top: 1px solid var(--line); }
 .lb-cap strong { font-weight: 500; font-size: 16px; }
@@ -165,41 +169,81 @@ a:hover .fx-glitch::after, a:focus-visible .fx-glitch::after, .giant:hover .fx-g
 <main class="gallery">
   <div class="head">
     <div>
-      <span class="eyebrow"><span class="dot" aria-hidden="true"></span>40 shots</span>
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span>50 shots</span>
       <h1>Gallery</h1>
       <p>Apps, dashboards and websites I've designed, from shipped products to explorations. Click any shot to see it full size.</p>
     </div>
     <div class="filters" role="group" aria-label="Filter by type">
-      <button class="filter" type="button" data-filter="all" aria-pressed="true">All <small>40</small></button>
-      <button class="filter" type="button" data-filter="Mobile app" aria-pressed="false">Mobile apps <small>12</small></button>
+      <button class="filter" type="button" data-filter="all" aria-pressed="true">All <small>50</small></button>
+      <button class="filter" type="button" data-filter="Mobile app" aria-pressed="false">Mobile apps <small>22</small></button>
       <button class="filter" type="button" data-filter="Dashboard" aria-pressed="false">Dashboards <small>22</small></button>
       <button class="filter" type="button" data-filter="Website" aria-pressed="false">Websites <small>6</small></button>
     </div>
   </div>
 
   <div class="masonry" id="masonry">
+    <button class="tile phone" type="button" data-type="Mobile app" data-ratio="1.250" data-full="img/gallery/bolter-chat-list.jpg" data-title="Chat list" data-meta="Bolter · Mobile app" data-alt="Chats with pinned workflow agents, filters and team conversations" aria-label="Chat list: Chats with pinned workflow agents, filters and team conversations">
+      <span class="shot"><img src="img/thumbs/gallery/bolter-chat-list.jpg" alt="Chats with pinned workflow agents, filters and team conversations" width="1179" height="2793" decoding="async"></span>
+      <span class="cap"><span>Chat list</span><small>Bolter · Mobile app</small></span>
+    </button>
+    <button class="tile phone" type="button" data-type="Mobile app" data-ratio="1.250" data-full="img/gallery/bolter-agent-home.jpg" data-title="Agent home" data-meta="Bolter · Mobile app" data-alt="Talk to Bolter: an empty chat with a row of workflow agents" aria-label="Agent home: Talk to Bolter: an empty chat with a row of workflow agents">
+      <span class="shot"><img src="img/thumbs/gallery/bolter-agent-home.jpg" alt="Talk to Bolter: an empty chat with a row of workflow agents" width="1179" height="2556" decoding="async"></span>
+      <span class="cap"><span>Agent home</span><small>Bolter · Mobile app</small></span>
+    </button>
+    <button class="tile phone" type="button" data-type="Mobile app" data-ratio="1.250" data-full="img/gallery/bolter-notion-approval.jpg" data-title="Access approval" data-meta="Bolter · Mobile app" data-alt="Bolter asking to grant Notion read and write access, then editing a page" aria-label="Access approval: Bolter asking to grant Notion read and write access, then editing a page">
+      <span class="shot"><img src="img/thumbs/gallery/bolter-notion-approval.jpg" alt="Bolter asking to grant Notion read and write access, then editing a page" width="1179" height="2556" decoding="async"></span>
+      <span class="cap"><span>Access approval</span><small>Bolter · Mobile app</small></span>
+    </button>
+    <button class="tile phone" type="button" data-type="Mobile app" data-ratio="1.250" data-full="img/gallery/bolter-group-chats-dark.jpg" data-title="Group chats, dark" data-meta="Bolter · Mobile app" data-alt="Dark mode group chat bubbles with member counts" aria-label="Group chats, dark: Dark mode group chat bubbles with member counts">
+      <span class="shot"><img src="img/thumbs/gallery/bolter-group-chats-dark.jpg" alt="Dark mode group chat bubbles with member counts" width="1179" height="2793" decoding="async"></span>
+      <span class="cap"><span>Group chats, dark</span><small>Bolter · Mobile app</small></span>
+    </button>
+    <button class="tile phone" type="button" data-type="Mobile app" data-ratio="1.250" data-full="img/gallery/bolter-chat-circles.jpg" data-title="Chat circles" data-meta="Bolter · Mobile app" data-alt="Groups, agents and friends as circles with unread badges" aria-label="Chat circles: Groups, agents and friends as circles with unread badges">
+      <span class="shot"><img src="img/thumbs/gallery/bolter-chat-circles.jpg" alt="Groups, agents and friends as circles with unread badges" width="1179" height="2793" decoding="async"></span>
+      <span class="cap"><span>Chat circles</span><small>Bolter · Mobile app</small></span>
+    </button>
+    <button class="tile phone" type="button" data-type="Mobile app" data-ratio="1.250" data-full="img/gallery/bolter-conversation-summaries.jpg" data-title="Conversation summaries" data-meta="Bolter · Mobile app" data-alt="Chat list with AI summaries and session tags" aria-label="Conversation summaries: Chat list with AI summaries and session tags">
+      <span class="shot"><img src="img/thumbs/gallery/bolter-conversation-summaries.jpg" alt="Chat list with AI summaries and session tags" width="1179" height="2793" decoding="async"></span>
+      <span class="cap"><span>Conversation summaries</span><small>Bolter · Mobile app</small></span>
+    </button>
+    <button class="tile phone" type="button" data-type="Mobile app" data-ratio="1.250" data-full="img/gallery/bolter-quick-actions.jpg" data-title="Quick actions" data-meta="Bolter · Mobile app" data-alt="Agent prompt chips: read docs, deep research, evaluate code, planning, manage team" aria-label="Quick actions: Agent prompt chips: read docs, deep research, evaluate code, planning, manage team">
+      <span class="shot"><img src="img/thumbs/gallery/bolter-quick-actions.jpg" alt="Agent prompt chips: read docs, deep research, evaluate code, planning, manage team" width="1179" height="2556" loading="lazy" decoding="async"></span>
+      <span class="cap"><span>Quick actions</span><small>Bolter · Mobile app</small></span>
+    </button>
+    <button class="tile phone" type="button" data-type="Mobile app" data-ratio="1.250" data-full="img/gallery/bolter-agent-new-chat.jpg" data-title="New agent chat" data-meta="Bolter · Mobile app" data-alt="Agent Anon greeting with a Slack workflow selector" aria-label="New agent chat: Agent Anon greeting with a Slack workflow selector">
+      <span class="shot"><img src="img/thumbs/gallery/bolter-agent-new-chat.jpg" alt="Agent Anon greeting with a Slack workflow selector" width="1179" height="2556" loading="lazy" decoding="async"></span>
+      <span class="cap"><span>New agent chat</span><small>Bolter · Mobile app</small></span>
+    </button>
+    <button class="tile phone" type="button" data-type="Mobile app" data-ratio="1.250" data-full="img/gallery/bolter-agent-team-chat.jpg" data-title="Team chat with an agent" data-meta="Bolter · Mobile app" data-alt="An agent and teammates replying in one thread" aria-label="Team chat with an agent: An agent and teammates replying in one thread">
+      <span class="shot"><img src="img/thumbs/gallery/bolter-agent-team-chat.jpg" alt="An agent and teammates replying in one thread" width="1179" height="2556" loading="lazy" decoding="async"></span>
+      <span class="cap"><span>Team chat with an agent</span><small>Bolter · Mobile app</small></span>
+    </button>
+    <button class="tile phone" type="button" data-type="Mobile app" data-ratio="1.250" data-full="img/gallery/bolter-chat-list-b.jpg" data-title="Chat list, alternative" data-meta="Bolter · Mobile app" data-alt="Alternative chat list layout with pinned agents and filters" aria-label="Chat list, alternative: Alternative chat list layout with pinned agents and filters">
+      <span class="shot"><img src="img/thumbs/gallery/bolter-chat-list-b.jpg" alt="Alternative chat list layout with pinned agents and filters" width="1179" height="2556" loading="lazy" decoding="async"></span>
+      <span class="cap"><span>Chat list, alternative</span><small>Bolter · Mobile app</small></span>
+    </button>
     <button class="tile" type="button" data-type="Mobile app" data-ratio="0.594" data-full="img/work/rana/hero.jpg" data-title="Cover" data-meta="Rana · Mobile app" data-alt="Rana Mental Wellness screens on three phones: mood history, mood insight and quick journal" data-href="work/rana.html" aria-label="Cover: Rana Mental Wellness screens on three phones: mood history, mood insight and quick journal">
-      <span class="shot"><img src="img/thumbs/work/rana/hero.jpg" alt="Rana Mental Wellness screens on three phones: mood history, mood insight and quick journal" width="2000" height="1188" decoding="async"></span>
+      <span class="shot"><img src="img/thumbs/work/rana/hero.jpg" alt="Rana Mental Wellness screens on three phones: mood history, mood insight and quick journal" width="2000" height="1188" loading="lazy" decoding="async"></span>
       <span class="cap"><span>Cover</span><small>Rana · Mobile app</small></span>
     </button>
     <button class="tile" type="button" data-type="Dashboard" data-ratio="0.711" data-full="img/work/soin-attention-market/01.jpg" data-title="Cover" data-meta="SOIN: Attention Market · Dashboard" data-alt="SOIN creators metrics dashboard" data-href="work/soin-attention-market.html" aria-label="Cover: SOIN creators metrics dashboard">
-      <span class="shot"><img src="img/thumbs/work/soin-attention-market/01.jpg" alt="SOIN creators metrics dashboard" width="2000" height="1422" decoding="async"></span>
+      <span class="shot"><img src="img/thumbs/work/soin-attention-market/01.jpg" alt="SOIN creators metrics dashboard" width="2000" height="1422" loading="lazy" decoding="async"></span>
       <span class="cap"><span>Cover</span><small>SOIN: Attention Market · Dashboard</small></span>
     </button>
     <button class="tile" type="button" data-type="Website" data-ratio="0.711" data-full="img/work/vitashield/94.jpg" data-title="Cover" data-meta="VitaShield · Website" data-alt="VitaShield homepage hero: Security Infrastructure For The Age Of Autonomous Systems" data-href="work/vitashield.html" aria-label="Cover: VitaShield homepage hero: Security Infrastructure For The Age Of Autonomous Systems">
-      <span class="shot"><img src="img/thumbs/work/vitashield/94.jpg" alt="VitaShield homepage hero: Security Infrastructure For The Age Of Autonomous Systems" width="2000" height="1422" decoding="async"></span>
+      <span class="shot"><img src="img/thumbs/work/vitashield/94.jpg" alt="VitaShield homepage hero: Security Infrastructure For The Age Of Autonomous Systems" width="2000" height="1422" loading="lazy" decoding="async"></span>
       <span class="cap"><span>Cover</span><small>VitaShield · Website</small></span>
     </button>
     <button class="tile" type="button" data-type="Dashboard" data-ratio="0.639" data-full="img/work/soin-talent-marketplace/hero.jpg" data-title="Cover" data-meta="SOIN: Talent Marketplace · Dashboard" data-alt="SOIN influencer profile dashboard" data-href="work/soin-talent-marketplace.html" aria-label="Cover: SOIN influencer profile dashboard">
-      <span class="shot"><img src="img/thumbs/work/soin-talent-marketplace/hero.jpg" alt="SOIN influencer profile dashboard" width="2000" height="1279" decoding="async"></span>
+      <span class="shot"><img src="img/thumbs/work/soin-talent-marketplace/hero.jpg" alt="SOIN influencer profile dashboard" width="2000" height="1279" loading="lazy" decoding="async"></span>
       <span class="cap"><span>Cover</span><small>SOIN: Talent Marketplace · Dashboard</small></span>
     </button>
     <button class="tile" type="button" data-type="Mobile app" data-ratio="0.594" data-full="img/work/rana/01-home.jpg" data-title="Home" data-meta="Rana · Mobile app" data-alt="Rana home screen with daily affirmation, smart insights and Today's Flow" data-href="work/rana.html" aria-label="Home: Rana home screen with daily affirmation, smart insights and Today's Flow">
-      <span class="shot"><img src="img/thumbs/work/rana/01-home.jpg" alt="Rana home screen with daily affirmation, smart insights and Today's Flow" width="1440" height="855" decoding="async"></span>
+      <span class="shot"><img src="img/thumbs/work/rana/01-home.jpg" alt="Rana home screen with daily affirmation, smart insights and Today's Flow" width="1440" height="855" loading="lazy" decoding="async"></span>
       <span class="cap"><span>Home</span><small>Rana · Mobile app</small></span>
     </button>
     <button class="tile" type="button" data-type="Dashboard" data-ratio="0.711" data-full="img/work/soin-attention-market/02.jpg" data-title="AI Intelligence Dashboard" data-meta="SOIN: Attention Market · Dashboard" data-alt="AI intelligence dashboard overview" data-href="work/soin-attention-market.html" aria-label="AI Intelligence Dashboard: AI intelligence dashboard overview">
-      <span class="shot"><img src="img/thumbs/work/soin-attention-market/02.jpg" alt="AI intelligence dashboard overview" width="2000" height="1422" decoding="async"></span>
+      <span class="shot"><img src="img/thumbs/work/soin-attention-market/02.jpg" alt="AI intelligence dashboard overview" width="2000" height="1422" loading="lazy" decoding="async"></span>
       <span class="cap"><span>AI Intelligence Dashboard</span><small>SOIN: Attention Market · Dashboard</small></span>
     </button>
     <button class="tile tall" type="button" data-type="Website" data-ratio="1.250" data-full="img/work/vitashield/87.jpg" data-title="Homepage" data-meta="VitaShield · Website" data-alt="VitaShield homepage, full page" data-href="work/vitashield.html" aria-label="Homepage: VitaShield homepage, full page">
@@ -403,6 +447,7 @@ a:hover .fx-glitch::after, a:focus-visible .fx-glitch::after, .giant:hover .fx-g
     var t = visible[at];
     img.src = t.dataset.full; img.alt = t.dataset.alt;
     stage.classList.toggle('tall', t.classList.contains('tall'));
+    stage.classList.toggle('phone', t.classList.contains('phone'));
     stage.scrollTop = 0;
     document.getElementById('lb-count').textContent = (at + 1) + ' / ' + visible.length;
     document.getElementById('lb-title').textContent = t.dataset.title;
