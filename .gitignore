@@ -4,3 +4,6 @@
 # Vercel project links (per machine) and build output made by website/vercel/build.sh
 .vercel/
 website/vercel/lemmy-portfolio-*/
+
+# Local preview config
+.claude/

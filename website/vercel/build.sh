@@ -1,6 +1,6 @@
 #!/bin/sh
 # Builds standalone Vercel sites for portfolio variations A and B from ../lemmy-portfolio-*.html,
-# plus each site's case study pages (../work/<site>/*.html, made by ../work/generate.js) and their images.
+# plus each site's About page, case study pages (../work/<site>/*.html, made by ../work/generate.js) and their images.
 # The artifact pages omit <!doctype>/<html>/<head>, so each page is wrapped in a full document here.
 set -e
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -26,9 +26,10 @@ build() {
   for img in "$@"; do cp "$SRC/img/$img" "$out/img/$img"; done
   for f in "$SRC/work/$key"/*.html; do wrap "$f" "$out/work/$(basename "$f")"; done
   wrap "$SRC/book/$key.html" "$out/book.html"
+  wrap "$SRC/about/$key.html" "$out/about.html"
   cp -R "$SRC/img/work" "$out/img/work"
 }
 
-build lemmy-portfolio-a lemmy-portfolio-a.html a rana.jpg soin-attention.jpg vitashield.jpg soin-talent.jpg
-build lemmy-portfolio-b lemmy-portfolio-b.html b rana.jpg soin-attention.jpg vitashield.jpg soin-talent.jpg
+build lemmy-portfolio-a lemmy-portfolio-a.html a rana.jpg soin-attention.jpg vitashield.jpg soin-talent.jpg lemmy.jpg
+build lemmy-portfolio-b lemmy-portfolio-b.html b rana.jpg soin-attention.jpg vitashield.jpg soin-talent.jpg lemmy.jpg
 echo "Built: $HERE/lemmy-portfolio-a  $HERE/lemmy-portfolio-b"
