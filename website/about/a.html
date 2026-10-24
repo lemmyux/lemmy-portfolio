@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Instrument+Sans:wght@400;500;600;700&display=swap">
 <style>
 /* Layout: about page. A narrative story beside a sticky portrait card (inspired by dahnizzy.com and creativestefan.work/about),
-   then labelled sections: clients, experience, services and tools, selected work, education, links. */
+   then labelled sections: clients, services and tools, selected work, links. */
 :root {
   color-scheme: dark;
   --bg: #0b0b0f;
@@ -74,25 +74,6 @@ h1 { margin: 18px 0 36px; font-weight: 500; font-size: clamp(48px, 7vw, 104px); 
 .clients span { color: var(--muted); }
 .clients i { font-style: normal; color: var(--dim); }
 
-.exp { border-bottom: 1px solid var(--line); }
-.exp summary { display: grid; grid-template-columns: minmax(0, 1fr) auto 20px; align-items: center; gap: 24px; padding: 20px 2px; cursor: pointer; list-style: none; }
-.exp summary::-webkit-details-marker { display: none; }
-.exp-co { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
-.exp-co strong { font-weight: 500; font-size: 20px; letter-spacing: -0.015em; }
-.exp-co small { font-size: 14px; color: var(--muted); }
-.exp time { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); white-space: nowrap; }
-.plus { position: relative; width: 14px; height: 14px; justify-self: end; }
-.plus::before, .plus::after { content: ""; position: absolute; inset: 6px 0 auto; height: 1.5px; background: var(--muted); transition: transform .25s, background-color .15s; }
-.plus::after { transform: rotate(90deg); }
-.exp[open] .plus::after { transform: rotate(0deg); }
-.exp summary:hover .plus::before, .exp summary:hover .plus::after { background: var(--accent); }
-.exp summary:hover strong { color: var(--accent); }
-.exp-body { padding: 0 2px 24px; max-width: 72ch; }
-.exp-body p { margin: 0 0 14px; font-size: 16px; line-height: 1.6; }
-.exp-body ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.exp-body li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.6; color: var(--muted); }
-.exp-body li::before { content: ""; position: absolute; left: 2px; top: .7em; width: 8px; height: 1px; background: var(--accent); }
-
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
 .tag { padding: 7px 11px; border: 1px solid var(--line); border-radius: var(--btn-r); font-size: 13px; color: var(--muted); }
 .tools { margin: 0; max-width: 60ch; font-size: 19px; line-height: 1.6; }
@@ -104,11 +85,6 @@ h1 { margin: 18px 0 36px; font-weight: 500; font-size: clamp(48px, 7vw, 104px); 
 .work-row:hover .ico, .link-row:hover .ico { color: var(--accent); transform: translate(2px, -2px); }
 .link-row span { font-size: 17px; }
 .link-row em { font-style: normal; font-size: 14px; color: var(--muted); }
-
-.edu { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto; align-items: baseline; gap: 24px; padding: 18px 2px; border-bottom: 1px solid var(--line); }
-.edu strong { font-weight: 500; font-size: 17px; }
-.edu span { font-size: 15px; color: var(--muted); }
-.edu time { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--dim); white-space: nowrap; }
 
 .cta { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 24px 40px; padding-block: 64px 96px; border-top: 1px solid var(--line); }
 .cta h2 { margin: 0; font-weight: 500; font-size: clamp(36px, 5vw, 72px); line-height: 1; letter-spacing: -0.04em; }
@@ -131,12 +107,9 @@ h1 { margin: 18px 0 36px; font-weight: 500; font-size: clamp(48px, 7vw, 104px); 
   .story p:first-child { font-size: 19px; }
 }
 @media (max-width: 600px) {
-  .exp summary { grid-template-columns: minmax(0, 1fr) 20px; gap: 6px 16px; }
-  .exp time { grid-row: 2; }
   .work-row { grid-template-columns: minmax(0, 1fr) 18px; gap: 6px 16px; }
   .work-row small { grid-row: 2; text-align: left; }
   .link-row em { display: none; }
-  .edu { grid-template-columns: 1fr; gap: 4px; }
   .cta .buttons { grid-template-columns: 1fr; width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
@@ -205,7 +178,7 @@ a:hover .fx-glitch::after, a:focus-visible .fx-glitch::after, .giant:hover .fx-g
       <h1>A bit about me…</h1>
       <div class="story">
         <p>I'm Lemmy, a senior product designer based in Lagos, Nigeria. I design products across B2C and B2B software, conversational AI, fintech and crypto, for teams in India, Dubai, the UK and the US.</p>
-        <p>Most recently, I led product design at SOIN Global, a social intelligence and influencer marketplace for crypto brands and creators. Alongside it, I took <a class="client" href="https://claude.ai/artifact/TZV8JohBEuEKk5NEneYutP" target="_blank" rel="noopener">Travon</a>, a multi-chain meme coin trading terminal, from discovery to MVP.</p>
+        <p>Most recently, I led product design at SOIN Global, a social intelligence and influencer marketplace for crypto brands and creators. Alongside it, I took <a class="client" href="https://claude.ai/artifact/TZV8JohBEuEKk5NEneYutP" target="_blank" rel="noopener">Clona</a>, a multi-chain trading terminal, from discovery to MVP.</p>
         <p>Before that, I spent a year leading design at <a class="client" href="https://alphablockz.io/" target="_blank" rel="noopener">Alpha Blockz</a>, a $100M startup incubator, shipping websites, design systems and investor decks that helped its startups raise <mark class="metric">$5M+</mark>. Over the same stretch I worked with Avinya Labs in Dubai on an AI-powered crypto trading app and Telegram mini-games.</p>
         <p>I started in 2022 at BeCreative Agency, redesigning client websites, then moved into enterprise software at Hydrogen HR, working on HR, payroll and job board platforms. I studied Computer Science at the University of Nigeria, Nsukka.</p>
         <p>Altogether, the startups I've designed for have secured over <mark class="metric">$10M in funding</mark> and reached <mark class="metric">50k+ users</mark>.</p>
@@ -228,55 +201,7 @@ a:hover .fx-glitch::after, a:focus-visible .fx-glitch::after, .giant:hover .fx-g
 
   <section class="block" aria-labelledby="h-clients">
     <h2 id="h-clients">I've designed for</h2>
-    <div class="clients"><a class="client" href="https://www.holcim.com/" target="_blank" rel="noopener">Holcim</a><i aria-hidden="true">/</i><a class="client" href="https://redacted.tenset.io/" target="_blank" rel="noopener">Tenset 2.0</a><i aria-hidden="true">/</i><a class="client" href="https://claude.ai/artifact/TZV8JohBEuEKk5NEneYutP" target="_blank" rel="noopener">Travon</a><i aria-hidden="true">/</i><a class="client" href="https://alphablockz.io/" target="_blank" rel="noopener">Alphablockz</a><i aria-hidden="true">/</i><span>SOIN Global</span><i aria-hidden="true">/</i><span>Avinya Labs</span><i aria-hidden="true">/</i><span>Hydrogen HR</span><i aria-hidden="true">/</i><span>VitaShield</span><i aria-hidden="true">/</i><span>BoG Intelligence</span></div>
-  </section>
-
-  <section class="block" aria-labelledby="h-exp">
-    <h2 id="h-exp">Experience</h2>
-    <div>
-        <details class="exp" open>
-          <summary><span class="exp-co"><strong>SOIN Global</strong><small>Product Designer · India</small></span><time>Jul 2025 – Jan 2026</time><span class="plus" aria-hidden="true"></span></summary>
-          <div class="exp-body">
-            <p>End-to-end design of a social intelligence and influencer marketplace platform, from discovery and UX architecture to high-fidelity UI and developer handoff.</p>
-            <ul><li>Researched crypto analytics and growth platforms such as Cookie3 and Kaito, contributing to a <mark class="metric">30%</mark> improvement in feature clarity for first-time users.</li><li>Designed analytics dashboards and profile systems for influencer performance, brand trust and campaign tracking, cutting user decision time by <mark class="metric">25%</mark>.</li><li>Set up a modular design system and interaction patterns that made feature iteration <mark class="metric">40%</mark> faster.</li></ul>
-          </div>
-        </details>
-        <details class="exp">
-          <summary><span class="exp-co"><strong>Travon Trading Terminal</strong><small>Product Designer, contract · Lagos</small></span><time>Oct 2025 – Dec 2025</time><span class="plus" aria-hidden="true"></span></summary>
-          <div class="exp-body">
-            <p>Product design for a multi-chain meme coin trading terminal, owning UX strategy, research, wireframes, UI and handoff from discovery to MVP.</p>
-            <ul><li>Simplified token selection, gas visibility and slippage controls in the core trading and swap flows, reducing user friction by <mark class="metric">35–40%</mark>.</li><li>Designed a non-custodial copy trading experience that fixes the fund-control and transparency issues seen in competitors.</li><li>Built wallet and trader analytics (PnL, ROI, win rate) that cut the time to find profitable wallets by <mark class="metric">45–50%</mark>.</li></ul>
-          </div>
-        </details>
-        <details class="exp">
-          <summary><span class="exp-co"><strong>Alpha Blockz</strong><small>Product Designer · British Virgin Islands (UK)</small></span><time>Oct 2024 – Oct 2025</time><span class="plus" aria-hidden="true"></span></summary>
-          <div class="exp-body">
-            <p>Design strategy and shared systems for a $100M startup incubator and its portfolio companies.</p>
-            <ul><li>Shipped consumer websites across gaming, AI and social apps, each with its own reusable design system.</li><li>Created investor-ready pitch decks and product narratives that supported <mark class="metric">$5M+</mark> in secured capital.</li><li>Improved delivery speed and cross-project alignment by <mark class="metric">30%+</mark> through centralised design leadership.</li></ul>
-          </div>
-        </details>
-        <details class="exp">
-          <summary><span class="exp-co"><strong>Avinya Labs</strong><small>UI/UX Designer · Dubai</small></span><time>Sep 2024 – May 2025</time><span class="plus" aria-hidden="true"></span></summary>
-          <div class="exp-body">
-            <p>Product design across 6+ teams in a startup incubator, from an AI-powered crypto trading app to consumer gaming products.</p>
-            <ul><li>Led UX/UI for Telegram mini-games and crypto casino games, driving a <mark class="metric">65%</mark> increase in engagement and <mark class="metric">30%</mark> growth in daily active users.</li><li>Acted as project manager across design, engineering and marketing, reducing cycle time by <mark class="metric">25%+</mark>.</li></ul>
-          </div>
-        </details>
-        <details class="exp">
-          <summary><span class="exp-co"><strong>Hydrogen HR</strong><small>UI/UX Designer, contract · Lagos</small></span><time>Mar 2023 – Aug 2023</time><span class="plus" aria-hidden="true"></span></summary>
-          <div class="exp-body">
-            <p>Migration to a modern, accessible HR and job board platform, alongside payroll and learning products.</p>
-            <ul><li>Wireframes and interactive prototypes that led to a <mark class="metric">50%</mark> increase in employer integration and payroll adoption.</li></ul>
-          </div>
-        </details>
-        <details class="exp">
-          <summary><span class="exp-co"><strong>BeCreative Agency</strong><small>Product Designer · Port Harcourt</small></span><time>Jan 2022 – Mar 2023</time><span class="plus" aria-hidden="true"></span></summary>
-          <div class="exp-body">
-            <p>Website redesigns, user research and A/B testing for agency clients.</p>
-            <ul><li>Improved navigation, layout and content hierarchy, lifting visitor retention by <mark class="metric">20%</mark>.</li><li>A/B tested 3 key features, raising conversion by <mark class="metric">30%</mark> and cutting drop-offs by <mark class="metric">25%</mark>.</li></ul>
-          </div>
-        </details>
-    </div>
+    <div class="clients"><a class="client" href="https://www.holcim.com/" target="_blank" rel="noopener">Holcim</a><i aria-hidden="true">/</i><a class="client" href="https://redacted.tenset.io/" target="_blank" rel="noopener">Tenset 2.0</a><i aria-hidden="true">/</i><a class="client" href="https://claude.ai/artifact/TZV8JohBEuEKk5NEneYutP" target="_blank" rel="noopener">Clona</a><i aria-hidden="true">/</i><a class="client" href="https://alphablockz.io/" target="_blank" rel="noopener">Alphablockz</a><i aria-hidden="true">/</i><span>SOIN Global</span><i aria-hidden="true">/</i><span>Avinya Labs</span><i aria-hidden="true">/</i><span>Hydrogen HR</span><i aria-hidden="true">/</i><span>VitaShield</span><i aria-hidden="true">/</i><span>BoG Intelligence</span></div>
   </section>
 
   <section class="block" aria-labelledby="h-tools">
@@ -294,14 +219,6 @@ a:hover .fx-glitch::after, a:focus-visible .fx-glitch::after, .giant:hover .fx-g
         <a class="work-row" href="work/soin-attention-market.html"><strong>SOIN: Attention Market</strong><small>Web App · AI · Crypto</small><svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         <a class="work-row" href="work/vitashield.html"><strong>VitaShield</strong><small>Website · Pitch Deck · Illustration</small><svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         <a class="work-row" href="work/soin-talent-marketplace.html"><strong>SOIN: Talent Marketplace</strong><small>Web App · AI · B2B</small><svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-    </div>
-  </section>
-
-  <section class="block" aria-labelledby="h-edu">
-    <h2 id="h-edu">Education</h2>
-    <div>
-        <div class="edu"><strong>University of Nigeria, Nsukka</strong><span>BSc Computer Science (Honours)</span><time>2020 – 2024</time></div>
-        <div class="edu"><strong>Udemy</strong><span>Zero Web &amp; Mobile Design UI/UX course</span><time>2021 – 2022</time></div>
     </div>
   </section>
 

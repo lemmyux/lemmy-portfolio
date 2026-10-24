@@ -390,18 +390,8 @@ function aboutPage(site) {
   const clients = a.clients.map(([name, url]) => url
     ? `<a class="client" href="${esc(url)}" ${ext}>${esc(name)}</a>`
     : `<span>${esc(name)}</span>`).join('<i aria-hidden="true">/</i>');
-  const experience = a.experience.map((e, i) => `
-        <details class="exp"${i === 0 ? ' open' : ''}>
-          <summary><span class="exp-co"><strong>${esc(e.company)}</strong><small>${esc(e.role)} · ${esc(e.place)}</small></span><time>${esc(e.dates)}</time><span class="plus" aria-hidden="true"></span></summary>
-          <div class="exp-body">
-            <p>${rich(e.summary)}</p>
-            <ul>${e.points.map(pt => `<li>${rich(pt)}</li>`).join('')}</ul>
-          </div>
-        </details>`).join('');
   const work = projects.map(p => `
         <a class="work-row" href="work/${p.slug}.html"><strong>${esc(p.title)}</strong><small>${esc(p.chips.join(' · '))}</small>${arrow}</a>`).join('');
-  const education = a.education.map(([school, course, years]) => `
-        <div class="edu"><strong>${esc(school)}</strong><span>${esc(course)}</span><time>${esc(years)}</time></div>`).join('');
   const elsewhere = a.elsewhere.map(([name, url]) => `
         <a class="link-row" href="${esc(url)}" ${ext}><span>${esc(name)}</span>${arrow}</a>`).join('') + `
         <a class="link-row" href="mailto:ugochukwuokongwu3@gmail.com" data-copy="ugochukwuokongwu3@gmail.com"><span>Email</span><em>ugochukwuokongwu3@gmail.com</em>${arrow}</a>`;
@@ -415,7 +405,7 @@ function aboutPage(site) {
 ${fontLink}
 <style>
 /* Layout: about page. A narrative story beside a sticky portrait card (inspired by dahnizzy.com and creativestefan.work/about),
-   then labelled sections: clients, experience, services and tools, selected work, education, links. */
+   then labelled sections: clients, services and tools, selected work, links. */
 :root {
 ${tokens}
   --panel-c: ${site.panelBg};
@@ -472,25 +462,6 @@ h1 { margin: 18px 0 36px; font-weight: 500; font-size: clamp(48px, 7vw, 104px); 
 .clients span { color: var(--muted); }
 .clients i { font-style: normal; color: var(--dim); }
 
-.exp { border-bottom: 1px solid var(--line); }
-.exp summary { display: grid; grid-template-columns: minmax(0, 1fr) auto 20px; align-items: center; gap: 24px; padding: 20px 2px; cursor: pointer; list-style: none; }
-.exp summary::-webkit-details-marker { display: none; }
-.exp-co { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
-.exp-co strong { font-weight: 500; font-size: 20px; letter-spacing: -0.015em; }
-.exp-co small { font-size: 14px; color: var(--muted); }
-.exp time { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); white-space: nowrap; }
-.plus { position: relative; width: 14px; height: 14px; justify-self: end; }
-.plus::before, .plus::after { content: ""; position: absolute; inset: 6px 0 auto; height: 1.5px; background: var(--muted); transition: transform .25s, background-color .15s; }
-.plus::after { transform: rotate(90deg); }
-.exp[open] .plus::after { transform: rotate(0deg); }
-.exp summary:hover .plus::before, .exp summary:hover .plus::after { background: var(--accent); }
-.exp summary:hover strong { color: var(--accent); }
-.exp-body { padding: 0 2px 24px; max-width: 72ch; }
-.exp-body p { margin: 0 0 14px; font-size: 16px; line-height: 1.6; }
-.exp-body ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.exp-body li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.6; color: var(--muted); }
-.exp-body li::before { content: ""; position: absolute; left: 2px; top: .7em; width: 8px; height: 1px; background: var(--accent); }
-
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
 .tag { padding: 7px 11px; border: 1px solid var(--line); border-radius: var(--btn-r); font-size: 13px; color: var(--muted); }
 .tools { margin: 0; max-width: 60ch; font-size: 19px; line-height: 1.6; }
@@ -502,11 +473,6 @@ h1 { margin: 18px 0 36px; font-weight: 500; font-size: clamp(48px, 7vw, 104px); 
 .work-row:hover .ico, .link-row:hover .ico { color: var(--accent); transform: translate(2px, -2px); }
 .link-row span { font-size: 17px; }
 .link-row em { font-style: normal; font-size: 14px; color: var(--muted); }
-
-.edu { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto; align-items: baseline; gap: 24px; padding: 18px 2px; border-bottom: 1px solid var(--line); }
-.edu strong { font-weight: 500; font-size: 17px; }
-.edu span { font-size: 15px; color: var(--muted); }
-.edu time { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--dim); white-space: nowrap; }
 
 .cta { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 24px 40px; padding-block: 64px 96px; border-top: 1px solid var(--line); }
 .cta h2 { margin: 0; font-weight: 500; font-size: clamp(36px, 5vw, 72px); line-height: 1; letter-spacing: -0.04em; }
@@ -529,12 +495,9 @@ h1 { margin: 18px 0 36px; font-weight: 500; font-size: clamp(48px, 7vw, 104px); 
   .story p:first-child { font-size: 19px; }
 }
 @media (max-width: 600px) {
-  .exp summary { grid-template-columns: minmax(0, 1fr) 20px; gap: 6px 16px; }
-  .exp time { grid-row: 2; }
   .work-row { grid-template-columns: minmax(0, 1fr) 18px; gap: 6px 16px; }
   .work-row small { grid-row: 2; text-align: left; }
   .link-row em { display: none; }
-  .edu { grid-template-columns: 1fr; gap: 4px; }
   .cta .buttons { grid-template-columns: 1fr; width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
@@ -584,12 +547,6 @@ ${soundBtn}
     <div class="clients">${clients}</div>
   </section>
 
-  <section class="block" aria-labelledby="h-exp">
-    <h2 id="h-exp">Experience</h2>
-    <div>${experience}
-    </div>
-  </section>
-
   <section class="block" aria-labelledby="h-tools">
     <h2 id="h-tools">What I do</h2>
     <div>
@@ -601,12 +558,6 @@ ${soundBtn}
   <section class="block" aria-labelledby="h-work">
     <h2 id="h-work">Selected work</h2>
     <div>${work}
-    </div>
-  </section>
-
-  <section class="block" aria-labelledby="h-edu">
-    <h2 id="h-edu">Education</h2>
-    <div>${education}
     </div>
   </section>
 
