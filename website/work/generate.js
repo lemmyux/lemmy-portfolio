@@ -1,5 +1,6 @@
 // Generates the case study pages for both portfolio sites (website/work/<site>/<slug>.html)
-// plus each site's Book a call page (website/book/<site>.html) and About page (website/about/<site>.html).
+// plus each site's Book a call page (website/book/<site>.html), About page (website/about/<site>.html)
+// and Gallery page (website/gallery/<site>.html).
 // Layout: sticky info column (chips, title, meta, problem / what I did / outcome) beside a scrolling
 // column of screens grouped by feature, ending in a "Next project" link.
 // Colours, fonts, glitch/decode effects and sounds are lifted from each site's homepage so they stay in sync.
@@ -12,6 +13,7 @@ const WEBSITE = path.resolve(__dirname, '..');
 const projects = require('./content.js');
 const booking = require('./booking.js');
 const about = require('./about.js');
+const gallery = require('./gallery.js');
 const RESUME = 'https://drive.google.com/file/d/1aKHTNvx0FsJgjQCnflHkWIIyESehs_f0/view?usp=drive_link';
 
 const SITES = {
@@ -163,6 +165,7 @@ ${soundBtn}
   <div class="seg status"><span class="dot" aria-hidden="true"></span>Case study · ${esc(p.title)}</div>
   <nav class="seg nav" aria-label="Main">
     <a href="../${site.work}" aria-current="page">Work</a>
+    <a href="../gallery.html">Gallery</a>
     <a href="../${site.about}">About</a>
     <a href="${RESUME}" target="_blank" rel="noopener">Resume</a>
     <a href="../#contact">Contact</a>
@@ -315,6 +318,7 @@ ${soundBtn}
   <div class="seg status"><span class="dot" aria-hidden="true"></span>Book a call</div>
   <nav class="seg nav" aria-label="Main">
     <a href="./${site.work}">Work</a>
+    <a href="gallery.html">Gallery</a>
     <a href="./${site.about}">About</a>
     <a href="${RESUME}" target="_blank" rel="noopener">Resume</a>
     <a href="./#contact">Contact</a>
@@ -545,6 +549,7 @@ ${soundBtn}
   <div class="seg status"><span class="dot" aria-hidden="true"></span>About</div>
   <nav class="seg nav" aria-label="Main">
     <a href="./${site.work}">Work</a>
+    <a href="gallery.html">Gallery</a>
     <a href="about.html" aria-current="page">About</a>
     <a href="${RESUME}" ${ext}>Resume</a>
     <a href="#contact">Contact</a>
@@ -645,6 +650,265 @@ ${soundJs}
 `;
 }
 
+// A 1000px-wide copy of each gallery image for the grid (website/img/thumbs/<path>); the full image opens in the viewer.
+function thumb(rel) {
+  const src = path.join(WEBSITE, 'img', rel), out = path.join(WEBSITE, 'img/thumbs', rel);
+  if (!fs.existsSync(out) || fs.statSync(out).mtimeMs < fs.statSync(src).mtimeMs) {
+    fs.mkdirSync(path.dirname(out), { recursive: true });
+    execFileSync('sips', ['-s', 'format', 'jpeg', '-s', 'formatOptions', '80', '--resampleWidth', String(Math.min(1000, dims(src).w)), src, '--out', out]);
+  }
+  return 'img/thumbs/' + rel;
+}
+
+// Gallery items: extras first, then the case study screens interleaved across projects so the grid mixes them.
+function galleryItems() {
+  const extras = gallery.extras.map(x => ({ rel: 'gallery/' + x.src, title: x.title, alt: x.alt || x.title, type: x.type || 'Other', meta: x.year ? String(x.year) : '' }));
+  const lists = projects.map(p => [[p.hero.src, p.hero.alt, 'Cover'], ...p.groups.flatMap(g => g.shots.map(([f, alt]) => [f, alt, g.name]))]
+    .filter(([f]) => !gallery.skip.includes(p.slug + '/' + f))
+    .map(([f, alt, name]) => ({ rel: `work/${p.slug}/${f}`, title: name, alt, type: gallery.caseStudies[p.slug] || 'Other', meta: p.title, href: `work/${p.slug}.html` })));
+  const mixed = [];
+  for (let i = 0; lists.some(l => i < l.length); i++) lists.forEach(l => { if (l[i]) mixed.push(l[i]); });
+  return [...extras, ...mixed].map(it => {
+    const d = dims(path.join(WEBSITE, 'img', it.rel));
+    return { ...it, w: d.w, h: d.h, tall: d.h / d.w > 2, thumb: thumb(it.rel) };
+  });
+}
+
+function galleryPage(site, items) {
+  const { fontLink, tokens, fxCss, soundBtn, fxJs, soundJs } = lift(site, { glitch: '.gallery-title-x', scramble: '.nav a, .filter' });
+  const types = gallery.types.filter(t => items.some(it => it.type === t));
+  const ext = 'target="_blank" rel="noopener"';
+  const TALL = 1.25; // tall pages show a 4:5 window that pans down the page on hover
+  const tiles = items.map((it, i) => {
+    const r = it.h / it.w;
+    const pan = it.tall ? ` style="--shift: -${((1 - TALL / r) * 100).toFixed(2)}%; --pan: ${(r * 1.6).toFixed(1)}s"` : '';
+    return `
+    <button class="tile${it.tall ? ' tall' : ''}" type="button" data-type="${esc(it.type)}" data-ratio="${(it.tall ? TALL : r).toFixed(3)}" data-full="img/${esc(it.rel)}" data-title="${esc(it.title)}" data-meta="${esc([it.meta, it.type].filter(Boolean).join(' · '))}" data-alt="${esc(it.alt)}"${it.href ? ` data-href="${it.href}"` : ''} aria-label="${esc(it.title)}: ${esc(it.alt)}">
+      <span class="shot"${pan}><img src="${it.thumb}" alt="${esc(it.alt)}" width="${it.w}" height="${it.h}"${i < 6 ? '' : ' loading="lazy"'} decoding="async">${it.tall ? '<span class="badge">Full page</span>' : ''}</span>
+      <span class="cap"><span>${esc(it.title)}</span><small>${esc([it.meta, it.type].filter(Boolean).join(' · '))}</small></span>
+    </button>`;
+  }).join('');
+
+  return `<!-- Generated by website/work/generate.js from website/work/gallery.js and content.js. Edit those, then re-run. -->
+<title>Gallery · Lemmy Jnr</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Apps, dashboards and websites designed by Lemmy Jnr.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+${fontLink}
+<style>
+/* Layout: gallery. Filter tabs above a masonry grid of inset cards (inspired by creativestefan.work and ajanwachuku.work/gallery).
+   Tall website pages show a window that pans down on hover. Clicking a card opens a full-screen viewer. */
+:root {
+${tokens}
+  --panel-c: ${site.panelBg};
+  --panel-r: ${site.panelRadius};
+  --btn-r: ${site.btnRadius};
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.ico { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: flex; height: 58px; background: var(--bg); border-bottom: 1px solid var(--line); padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+.seg { display: flex; align-items: center; gap: 22px; padding-inline: 20px; border-right: 1px solid var(--line); white-space: nowrap; }
+.wordmark { font-weight: ${site.wordmark}; font-size: 20px; letter-spacing: -0.01em; }
+.status { gap: 10px; font-size: 12px; font-weight: 500; text-transform: uppercase; line-height: 1.2; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.nav { border-right: 0; font-size: 13px; font-weight: 500; }
+.nav a { color: var(--muted); transition: color .15s; }
+.nav a:hover, .nav a[aria-current] { color: var(--fg); }
+.spacer { flex: 1; }
+.clock { font-family: var(--mono); font-size: 15px; padding-inline: 24px; border-left: 1px solid var(--line); border-right: 0; font-variant-numeric: tabular-nums; }
+
+.gallery { padding: 0 max(24px, env(safe-area-inset-right, 0px)) 96px max(24px, env(safe-area-inset-left, 0px)); }
+.head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 24px 48px; padding-block: 56px 32px; }
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: 18px 0 16px; font-weight: 500; font-size: clamp(48px, 7vw, 104px); line-height: .95; letter-spacing: -0.045em; }
+.head p { margin: 0; max-width: 52ch; font-size: 17px; line-height: 1.55; color: var(--muted); }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.filter { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; background: transparent; border: 1px solid var(--line); border-radius: var(--btn-r); color: var(--muted); font: 500 13px var(--sans); cursor: pointer; transition: color .15s, border-color .15s, background-color .15s; }
+.filter small { font-family: var(--mono); font-size: 11px; color: var(--dim); }
+.filter:hover { color: var(--fg); border-color: #3a3a3a; }
+.filter[aria-pressed="true"] { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+.filter[aria-pressed="true"] small { color: inherit; opacity: .6; }
+
+.masonry { columns: 3 320px; column-gap: 14px; }
+.masonry.built { display: flex; gap: 14px; align-items: flex-start; }
+.col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.tile { all: unset; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 14px; padding: 10px; background: var(--panel-c); border: 1px solid var(--line); border-radius: var(--panel-r); cursor: zoom-in; break-inside: avoid; transition: border-color .2s; }
+.masonry.built .tile { margin-bottom: 0; }
+.tile[hidden] { display: none; }
+.tile:hover { border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); }
+.tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.shot { position: relative; display: block; overflow: hidden; border-radius: max(0px, calc(var(--panel-r) - 4px)); background: #0e0e10; }
+.shot img { display: block; width: 100%; height: auto; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.tile:not(.tall):hover .shot img { transform: scale(1.025); }
+.tile.tall .shot { aspect-ratio: 4 / 5; }
+.tile.tall .shot img { transition: transform var(--pan) linear; }
+.tile.tall:hover .shot img, .tile.tall:focus-visible .shot img { transform: translateY(var(--shift)); transition-duration: var(--pan); }
+.badge { position: absolute; top: 10px; left: 10px; padding: 5px 8px; background: color-mix(in srgb, var(--bg) 80%, transparent); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border-radius: 2px; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--fg); }
+.cap { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 0 4px 2px; }
+.cap span { overflow: hidden; font-size: 14px; font-weight: 500; white-space: nowrap; text-overflow: ellipsis; }
+.cap small { flex: none; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+
+.lb { width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; background: var(--bg); color: var(--fg); }
+.lb::backdrop { background: transparent; }
+.lb[open] { display: flex; flex-direction: column; }
+.lb-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: max(14px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 14px max(16px, env(safe-area-inset-left, 0px)); border-bottom: 1px solid var(--line); }
+.lb-count { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--muted); }
+.lb-btns { display: flex; gap: 6px; }
+.lb-btn { display: inline-grid; place-items: center; width: 40px; height: 40px; background: transparent; border: 1px solid var(--line); border-radius: var(--btn-r); color: var(--fg); cursor: pointer; transition: border-color .15s; }
+.lb-btn:hover { border-color: var(--accent); }
+.lb-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.lb-stage { flex: 1; min-height: 0; display: flex; justify-content: center; align-items: center; overflow: auto; overscroll-behavior: contain; padding: 24px; }
+.lb-stage img { display: block; max-width: min(1400px, 100%); max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: max(0px, calc(var(--panel-r) - 4px)); }
+.lb-stage.tall { align-items: flex-start; }
+.lb-stage.tall img { width: min(1100px, 100%); max-width: none; max-height: none; }
+.lb-cap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; padding: 14px max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); border-top: 1px solid var(--line); }
+.lb-cap strong { font-weight: 500; font-size: 16px; }
+.lb-cap span { flex: 1; min-width: 200px; font-size: 14px; color: var(--muted); }
+.lb-cap small { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.lb-cap a { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: var(--accent); }
+.lb-cap a:hover .ico { transform: translate(2px, -2px); }
+
+@media (max-width: 1100px) { .status { display: none; } }
+@media (max-width: 960px) {
+  .spacer, .clock { display: none; }
+  .nav { gap: 16px; padding-inline: 16px; overflow-x: auto; }
+  .seg:first-child { padding-left: max(16px, env(safe-area-inset-left, 0px)); }
+  .gallery { padding: 0 max(16px, env(safe-area-inset-right, 0px)) 64px max(16px, env(safe-area-inset-left, 0px)); }
+  .head { padding-block: 40px 24px; }
+  .masonry, .masonry.built, .col { gap: 10px; column-gap: 10px; }
+  .lb-stage { padding: 12px; }
+}
+@media (max-width: 600px) { .cap { flex-direction: column; align-items: flex-start; gap: 4px; } .cap span { white-space: normal; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+${fxCss}</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></symbol>
+</svg>
+${soundBtn}
+<header class="topbar">
+  <div class="seg"><a class="wordmark" href="./">Lemmy Jnr</a></div>
+  <div class="seg status"><span class="dot" aria-hidden="true"></span>Gallery</div>
+  <nav class="seg nav" aria-label="Main">
+    <a href="./${site.work}">Work</a>
+    <a href="gallery.html" aria-current="page">Gallery</a>
+    <a href="about.html">About</a>
+    <a href="${RESUME}" ${ext}>Resume</a>
+    <a href="./#contact">Contact</a>
+  </nav>
+  <div class="spacer"></div>
+  <div class="seg clock" id="clock" aria-label="Local time">9:25 AM</div>
+</header>
+
+<main class="gallery">
+  <div class="head">
+    <div>
+      <span class="eyebrow"><span class="dot" aria-hidden="true"></span>${items.length} shots</span>
+      <h1>Gallery</h1>
+      <p>Apps, dashboards and websites I've designed, from shipped products to explorations. Click any shot to see it full size.</p>
+    </div>
+    <div class="filters" role="group" aria-label="Filter by type">
+      <button class="filter" type="button" data-filter="all" aria-pressed="true">All <small>${items.length}</small></button>
+      ${types.map(t => `<button class="filter" type="button" data-filter="${esc(t)}" aria-pressed="false">${esc(t)}s <small>${items.filter(it => it.type === t).length}</small></button>`).join('\n      ')}
+    </div>
+  </div>
+
+  <div class="masonry" id="masonry">${tiles}
+  </div>
+</main>
+
+<dialog class="lb" id="lb" aria-label="Image viewer">
+  <div class="lb-bar">
+    <span class="lb-count" id="lb-count"></span>
+    <div class="lb-btns">
+      <button class="lb-btn" type="button" id="lb-prev" aria-label="Previous"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m11 6-6 6 6 6"/></svg></button>
+      <button class="lb-btn" type="button" id="lb-next" aria-label="Next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
+      <button class="lb-btn" type="button" id="lb-close" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+  </div>
+  <div class="lb-stage" id="lb-stage"><img id="lb-img" alt=""></div>
+  <div class="lb-cap"><strong id="lb-title"></strong><span id="lb-alt"></span><small id="lb-meta"></small><a id="lb-link" href="#">View case study <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+</dialog>
+
+<script>
+(function () {
+  var clock = document.getElementById('clock');
+  function tick() { clock.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }
+  tick(); setInterval(tick, 15000);
+
+  var grid = document.getElementById('masonry');
+  var tiles = [].slice.call(grid.querySelectorAll('.tile'));
+  var visible = tiles;
+
+  // Masonry: deal visible tiles into columns left to right, each going to the shortest column,
+  // so the grid reads in rows (newest first) instead of top to bottom.
+  var lastCols = 0;
+  function layout(force) {
+    var w = grid.clientWidth, n = w >= 1100 ? 3 : w >= 600 ? 2 : 1;
+    if (n === lastCols && !force) return;
+    lastCols = n;
+    grid.querySelectorAll('.col').forEach(function (c) { c.remove(); });
+    var cols = [], heights = [];
+    for (var i = 0; i < n; i++) { var c = document.createElement('div'); c.className = 'col'; grid.appendChild(c); cols.push(c); heights.push(0); }
+    tiles.forEach(function (t) {
+      if (t.hidden) { cols[0].appendChild(t); return; }
+      var k = heights.indexOf(Math.min.apply(null, heights));
+      cols[k].appendChild(t);
+      heights[k] += parseFloat(t.dataset.ratio) + 0.08;
+    });
+    grid.classList.add('built');
+  }
+  layout(true);
+  var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { layout(false); }, 120); });
+
+  document.querySelectorAll('.filter').forEach(function (f) {
+    f.addEventListener('click', function () {
+      var type = f.dataset.filter;
+      document.querySelectorAll('.filter').forEach(function (o) { o.setAttribute('aria-pressed', String(o === f)); });
+      tiles.forEach(function (t) { t.hidden = type !== 'all' && t.dataset.type !== type; });
+      visible = tiles.filter(function (t) { return !t.hidden; });
+      layout(true);
+    });
+  });
+
+  // Viewer: full-size image with caption; arrows and keys move through the visible tiles.
+  var lb = document.getElementById('lb'), img = document.getElementById('lb-img'), stage = document.getElementById('lb-stage');
+  var link = document.getElementById('lb-link'), at = 0;
+  function show(i) {
+    at = (i + visible.length) % visible.length;
+    var t = visible[at];
+    img.src = t.dataset.full; img.alt = t.dataset.alt;
+    stage.classList.toggle('tall', t.classList.contains('tall'));
+    stage.scrollTop = 0;
+    document.getElementById('lb-count').textContent = (at + 1) + ' / ' + visible.length;
+    document.getElementById('lb-title').textContent = t.dataset.title;
+    document.getElementById('lb-alt').textContent = t.dataset.alt;
+    document.getElementById('lb-meta').textContent = t.dataset.meta;
+    link.hidden = !t.dataset.href;
+    if (t.dataset.href) link.href = t.dataset.href;
+  }
+  tiles.forEach(function (t) { t.addEventListener('click', function () { show(visible.indexOf(t)); lb.showModal(); }); });
+  document.getElementById('lb-prev').addEventListener('click', function () { show(at - 1); });
+  document.getElementById('lb-next').addEventListener('click', function () { show(at + 1); });
+  document.getElementById('lb-close').addEventListener('click', function () { lb.close(); });
+  lb.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); show(at - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); show(at + 1); }
+  });
+  lb.addEventListener('close', function () { var t = visible[at]; if (t) t.focus(); });
+})();
+</script>
+${fxJs}
+${soundJs}
+`;
+}
+
+const galleryList = galleryItems();
 for (const [key, site] of Object.entries(SITES)) {
   const dir = path.join(__dirname, key);
   fs.mkdirSync(dir, { recursive: true });
@@ -656,5 +920,7 @@ for (const [key, site] of Object.entries(SITES)) {
   fs.writeFileSync(path.join(WEBSITE, 'book', key + '.html'), bookPage(site));
   fs.mkdirSync(path.join(WEBSITE, 'about'), { recursive: true });
   fs.writeFileSync(path.join(WEBSITE, 'about', key + '.html'), aboutPage(site));
-  console.log(`site ${key}: ${projects.map(p => p.slug + '.html').join(', ')}, book/${key}.html, about/${key}.html (calendar: ${booking.googleUrl ? 'Google: ' + booking.googleUrl : booking.calLink ? 'Cal.com: ' + booking.calLink : 'not set yet'})`);
+  fs.mkdirSync(path.join(WEBSITE, 'gallery'), { recursive: true });
+  fs.writeFileSync(path.join(WEBSITE, 'gallery', key + '.html'), galleryPage(site, galleryList));
+  console.log(`site ${key}: ${projects.map(p => p.slug + '.html').join(', ')}, book/${key}.html, about/${key}.html, gallery/${key}.html (${galleryList.length} shots) (calendar: ${booking.googleUrl ? 'Google: ' + booking.googleUrl : booking.calLink ? 'Cal.com: ' + booking.calLink : 'not set yet'})`);
 }
