@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VitaShield · Interactive landing page</title>
+<meta name="description" content="Interactive prototype of the VitaShield landing page, designed by Lemmy Jnr.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600&display=swap">
+<style>
+/* VitaShield landing page, rebuilt in code from Lemmy's Figma design (port-with-claude, node 112:19442).
+   The page is laid out at the design's 1440px width and scaled to fit whatever frame shows it.
+   ?mode=cover plays a looping tour for portfolio covers; any other mode is free to explore. */
+:root {
+  --bg: #000;
+  --fg: #fff;
+  --muted: #b9b9b9;
+  --dim: #7a7a7a;
+  --blue: #0b7ff5;
+  --blue-l: #4da3ff;
+  --line: #2a2a2a;
+  --card: #161616;
+  --sans: "Inter", system-ui, sans-serif;
+  --display: "Inter Tight", "Inter", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); }
+body { overflow-x: hidden; color: var(--fg); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+body.cover { overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+.page { position: absolute; top: 0; left: 0; width: 1440px; transform-origin: 0 0; }
+section, header, footer { position: relative; width: 1440px; }
+.arrow { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 14px; white-space: nowrap; border: 0; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color .2s, color .2s, box-shadow .2s, transform .2s; }
+.btn:hover .arrow { transform: translateX(3px); }
+.btn:active { transform: translateY(1px); }
+.btn.dark { background: #1c1c1c; color: #fff; }
+.btn.dark:hover { background: #2a2a2a; }
+.btn.blue { background: var(--blue); color: #fff; }
+.btn.blue:hover { background: #2b91ff; box-shadow: 0 0 0 4px rgba(11,127,245,.25); }
+.btn.white { background: #fff; color: #000; }
+.btn.white:hover { background: #e9f3ff; box-shadow: 0 0 0 4px rgba(255,255,255,.12); }
+.dots-bg { background-image: radial-gradient(circle, rgba(255,255,255,.13) 1px, transparent 1.4px); background-size: 22px 22px; background-position: 6px 6px; }
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+.reveal.in { opacity: 1; transform: none; }
+
+/* ---------- Hero ---------- */
+.hero { height: 1013px; overflow: hidden; background: linear-gradient(180deg, #0a72dc 0%, #0858b0 12%, #052e5c 32%, #01070f 55%, #000 66%); }
+.bars { position: absolute; inset: 0; pointer-events: none; }
+.bar { position: absolute; top: 0; background: linear-gradient(180deg, rgba(64,150,255,.45), rgba(20,90,190,.18) 55%, transparent); transform-origin: top; animation: breathe 6s ease-in-out infinite; }
+@keyframes breathe { 0%, 100% { transform: scaleY(1); opacity: .9; } 50% { transform: scaleY(.9); opacity: .65; } }
+.nav { position: absolute; top: 0; left: 0; right: 0; height: 72px; z-index: 5; }
+.logo { position: absolute; left: 108px; top: 21px; display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 500; letter-spacing: -0.01em; }
+.logo svg { width: 22px; height: 28px; }
+.menu { position: absolute; left: 440px; top: 16px; display: flex; gap: 16px; }
+.menu > div { position: relative; }
+.menu .item { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; font-size: 16px; font-weight: 500; color: #fff; cursor: pointer; border-radius: 6px; transition: background-color .2s, color .2s; background: none; border: 0; }
+.menu .item.active { color: #7cbcff; }
+.menu .item:hover, .menu .open > .item { background: rgba(255,255,255,.08); }
+.menu .chev { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; transition: transform .2s; }
+.menu .open .chev { transform: rotate(180deg); }
+.drop { position: absolute; top: 48px; left: 0; min-width: 260px; padding: 8px; background: rgba(8,16,28,.92); border: 1px solid rgba(255,255,255,.1); border-radius: 10px; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity .2s, transform .2s; }
+.open > .drop { opacity: 1; transform: none; pointer-events: auto; }
+.drop a { display: block; padding: 10px 12px; border-radius: 6px; font-size: 14px; }
+.drop a small { display: block; margin-top: 2px; font-size: 12px; color: var(--dim); }
+.drop a:hover { background: rgba(77,163,255,.12); }
+.nav .cta { position: absolute; left: 1179px; top: 16px; }
+.pill { position: absolute; left: 594px; top: 88px; display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px 0 14px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.12); font-size: 13px; color: #d6e6f8; cursor: pointer; transition: background-color .2s; }
+.pill:hover { background: rgba(255,255,255,.16); }
+.pill:hover .arrow { transform: translateX(3px); }
+.hero-copy { position: absolute; left: 214px; top: 150px; width: 1012px; text-align: center; }
+.hero h1 { margin: 0; font-family: var(--display); font-weight: 600; font-size: 64px; line-height: 79px; letter-spacing: -0.02em; text-shadow: 0 2px 30px rgba(0,0,0,.25); }
+.hero h1 .w { display: inline-block; opacity: 0; transform: translateY(24px); filter: blur(6px); animation: word .9s cubic-bezier(.2,.7,.2,1) forwards; }
+@keyframes word { to { opacity: 1; transform: none; filter: none; } }
+.hero-copy p { width: 912px; margin: 24px auto 0; font-size: 18px; line-height: 24px; color: #cfd6df; }
+.hero-btns { display: flex; justify-content: center; gap: 16px; margin-top: 32px; }
+.circuit { position: absolute; left: 0; top: 500px; width: 1440px; height: 317px; }
+.circuit svg.side { position: absolute; top: 0; width: 562px; height: 317px; overflow: visible; }
+.circuit svg.side.r { left: 879px; transform: scaleX(-1); }
+.trace { fill: none; stroke: #2f7fe0; stroke-width: 1.4; stroke-dasharray: 2 3; opacity: .75; }
+.spark { fill: none; stroke: #9fd2ff; stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 46 900; filter: drop-shadow(0 0 4px #4da3ff); animation: spark 3.2s linear infinite; }
+@keyframes spark { from { stroke-dashoffset: 946; } to { stroke-dashoffset: 0; } }
+.node { fill: #4da3ff; }
+.shield-wrap { position: absolute; left: 562px; top: 0; width: 317px; height: 317px; cursor: pointer; }
+.ring { position: absolute; border-radius: 50%; }
+.ring.r1 { inset: 0; border: 1px solid rgba(77,163,255,.45); background: radial-gradient(circle, rgba(10,60,120,.0) 60%, rgba(10,60,120,.35)); animation: ring 4s ease-in-out infinite; }
+.ring.r2 { inset: 24px; background: radial-gradient(circle at 50% 40%, #0d5aa8, #072b55 75%); box-shadow: 0 0 60px rgba(11,127,245,.25); }
+.ring.r3 { inset: 52px; background: radial-gradient(circle at 50% 35%, #1a85e8, #0b4c94 80%); box-shadow: inset 0 0 30px rgba(0,0,0,.35); }
+@keyframes ring { 0%, 100% { box-shadow: 0 0 0 0 rgba(77,163,255,.0); } 50% { box-shadow: 0 0 0 10px rgba(77,163,255,.08), 0 0 50px rgba(77,163,255,.25); } }
+.shield { position: absolute; left: 50%; top: 50%; width: 118px; height: 140px; transform: translate(-50%, -50%); transition: transform .5s cubic-bezier(.2,.7,.2,1); filter: drop-shadow(0 10px 24px rgba(0,0,0,.35)); }
+.shield-wrap:hover .shield { transform: translate(-50%, -50%) scale(1.08); }
+.shield .dot { fill: #d8ecff; animation: twinkle 2.4s ease-in-out infinite; }
+@keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+.logos { position: absolute; left: 0; right: 0; top: 897px; height: 57px; display: flex; align-items: center; justify-content: center; gap: 50px; }
+.logos img { display: block; height: auto; opacity: .9; mix-blend-mode: screen; transition: opacity .2s, filter .2s; }
+.logos img:hover { opacity: 1; filter: brightness(1.6); }
+
+/* ---------- Who it's for ---------- */
+.who { height: 926px; }
+.who-copy { position: absolute; left: 370px; top: 82px; width: 700px; text-align: center; }
+.who h2 { margin: 0; font-family: var(--display); font-weight: 500; font-size: 64px; line-height: 82px; letter-spacing: -0.025em; }
+.who-copy p { margin: 16px 0 0; font-size: 18px; line-height: 30px; color: var(--muted); }
+.who .btn { position: absolute; left: 649px; top: 287px; }
+.wires { position: absolute; inset: 0; width: 1440px; height: 926px; pointer-events: none; }
+.wire { fill: none; stroke: #3f86d8; stroke-width: 2; stroke-linecap: round; stroke-dasharray: var(--len); stroke-dashoffset: var(--len); transition: stroke-dashoffset 1.4s cubic-bezier(.4,.1,.2,1); }
+.who.in .wire { stroke-dashoffset: 0; }
+.pulse { fill: none; stroke: #b9e0ff; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 18 600; opacity: 0; filter: drop-shadow(0 0 4px #4da3ff); }
+.who.in .pulse { opacity: 1; animation: pulse 2.6s linear infinite; }
+@keyframes pulse { from { stroke-dashoffset: 618; } to { stroke-dashoffset: 0; } }
+.tag { position: absolute; height: 55px; display: flex; align-items: center; justify-content: center; padding: 0 14px; background: rgba(0,0,0,.6); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); font-size: 12px; line-height: 15px; letter-spacing: -0.02em; text-align: center; cursor: default; opacity: 0; transform: scale(.94); transition: opacity .6s, transform .6s, box-shadow .3s, background-color .3s; }
+.who.in .tag { opacity: 1; transform: none; }
+.tag::before, .tag::after { content: ""; position: absolute; left: -2px; right: -2px; height: 9px; border: 2px solid var(--c); pointer-events: none; transition: left .3s, right .3s; }
+.tag::before { top: -2px; border-bottom: 0; clip-path: polygon(0 0, 14px 0, 14px 100%, 0 100%, 0 0, 100% 0, 100% 100%, calc(100% - 14px) 100%, calc(100% - 14px) 0); }
+.tag::after { bottom: -2px; border-top: 0; clip-path: polygon(0 0, 14px 0, 14px 100%, 0 100%, 0 0, 100% 0, 100% 100%, calc(100% - 14px) 100%, calc(100% - 14px) 0); }
+.tag:hover, .tag.hot { background: color-mix(in srgb, var(--c) 14%, #000); box-shadow: 0 0 24px color-mix(in srgb, var(--c) 35%, transparent); }
+.tag:hover::before, .tag:hover::after, .tag.hot::before, .tag.hot::after { left: -6px; right: -6px; }
+.hub { position: absolute; width: 36px; height: 36px; display: grid; place-items: center; background: #0b1a2e; border: 1px solid #2f73d0; border-radius: 6px; color: #4b9cff; cursor: pointer; opacity: 0; transition: opacity .6s .4s, transform .25s, box-shadow .25s; }
+.who.in .hub { opacity: 1; }
+.hub svg { width: 16px; height: 16px; }
+.hub:hover, .hub.hot { transform: scale(1.12); box-shadow: 0 0 0 4px rgba(75,156,255,.18), 0 0 20px rgba(75,156,255,.5); }
+
+/* ---------- Value proposition ---------- */
+.value { height: 660px; }
+.value .lines { position: absolute; left: 0; top: 0; width: 1440px; height: 420px; pointer-events: none; }
+.rail { fill: none; stroke: #3a3a3a; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.streak { fill: none; stroke: url(#streakGrad); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 70 1400; animation: streak 3.6s linear infinite; }
+.value.unlocked .streak { animation-duration: 1.2s; stroke: #8ef5c0; }
+@keyframes streak { from { stroke-dashoffset: 1470; } to { stroke-dashoffset: 0; } }
+.lock { position: absolute; left: 607px; top: 82px; width: 225px; height: 295px; }
+.shackle { position: absolute; left: 25px; top: 0; width: 175px; height: 120px; border: 9px solid #2e2e2e; border-bottom: 0; border-radius: 70px 70px 0 0; transition: transform .6s cubic-bezier(.3,1.6,.5,1), border-color .4s; }
+.value.unlocked .shackle { transform: translateY(-30px); border-color: #3e6b55; }
+.body { position: absolute; left: 0; top: 89px; width: 225px; height: 206px; padding: 25px 28px; background: linear-gradient(180deg, #121212, #070707); border: 2px solid #343434; border-radius: 26px; box-shadow: 0 20px 60px rgba(0,0,0,.6); transition: border-color .4s, box-shadow .4s; }
+.value.unlocked .body { border-color: #8ef5c0; box-shadow: 0 0 40px rgba(142,245,192,.25); }
+.pad { display: grid; grid-template-columns: repeat(3, 52px); gap: 0 6px; }
+.key { position: relative; width: 52px; height: 52px; display: grid; place-items: center; background: none; border: 0; padding: 0; font-family: var(--display); font-size: 26px; color: #3b3b3b; cursor: pointer; transition: color .2s; }
+.key svg { position: absolute; inset: 0; width: 52px; height: 52px; fill: none; stroke: #2f2f2f; stroke-width: 2; transition: stroke .2s, fill .2s; }
+.key span { position: relative; }
+.key:hover { color: #9a9a9a; }
+.key:hover svg { stroke: #555; }
+.key.on { color: #000; }
+.key.on svg { fill: #8ef5c0; stroke: #8ef5c0; }
+.value.unlocked .key { color: #8ef5c0; }
+.value.unlocked .key svg { stroke: #2f6b50; }
+.code { position: absolute; left: 0; right: 0; top: 392px; display: flex; justify-content: center; gap: 10px; }
+.code i { width: 22px; height: 3px; background: #2b2b2b; transition: background-color .2s; }
+.code i.f { background: #8ef5c0; }
+.code-hint { position: absolute; left: 0; right: 0; top: 400px; text-align: center; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #4d4d4d; opacity: 0; transition: opacity .3s; }
+.value:hover .code-hint { opacity: 1; }
+.value.unlocked .code-hint { opacity: 0; }
+.value-copy { position: absolute; left: 206px; top: 432px; width: 1028px; text-align: center; }
+.value h2 { margin: 0; font-family: var(--display); font-weight: 500; font-size: 36px; line-height: 44px; letter-spacing: -0.02em; }
+.value-copy p { width: 900px; margin: 32px auto 0; font-size: 16px; line-height: 26px; color: var(--muted); }
+.cells { position: absolute; left: -42px; top: 433px; display: grid; grid-template-columns: repeat(10, 26px); gap: 7px; }
+.cells i { width: 26px; height: 18px; border-radius: 2px; background: #8ef5c0; opacity: .25; animation: cell 2.8s steps(1) infinite; }
+@keyframes cell { 0% { opacity: .25; } 30% { opacity: .9; } 60% { opacity: .45; } 80% { opacity: .15; } }
+.sparkle { position: absolute; left: 1335px; top: -19px; width: 135px; height: 152px; }
+.sparkle circle { fill: #ffe53b; animation: twinkle 2s ease-in-out infinite; }
+
+/* ---------- Trust & security ---------- */
+.trust { height: 1294px; }
+.trust-head { position: absolute; left: 100px; top: 82px; width: 1074px; }
+.trust h2 { margin: 0; font-family: var(--display); font-weight: 500; font-size: 34px; line-height: 40px; letter-spacing: -0.02em; }
+.trust-head p { margin: 24px 0 0; font-size: 16px; line-height: 24px; color: var(--muted); }
+.trust .btn { position: absolute; left: 1197px; top: 83px; }
+.card { position: absolute; width: 370px; height: 460px; padding: 0 16px; background: var(--card); cursor: default; transition: background .5s, box-shadow .4s, transform .4s; }
+.card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,90,180,0) 30%, rgba(14,90,175,.55) 80%, rgba(16,100,190,.75)); opacity: 0; transition: opacity .5s; pointer-events: none; }
+.card .corner { position: absolute; width: 21px; height: 24px; border: 2px solid #8b8b8b; transition: border-color .3s, width .3s, height .3s; }
+.card .tl { left: 2px; top: 2px; border-right: 0; border-bottom: 0; }
+.card .tr { right: 2px; top: 2px; border-left: 0; border-bottom: 0; }
+.card .bl { left: 2px; bottom: -1px; border-right: 0; border-top: 0; }
+.card .br { right: 2px; bottom: -1px; border-left: 0; border-top: 0; }
+.card:hover, .card.hot { transform: translateY(-4px); box-shadow: inset 0 0 0 1px rgba(75,156,255,.7), 0 18px 50px rgba(0,0,0,.5); }
+.card:hover::before, .card.hot::before { opacity: 1; }
+.card:hover .corner, .card.hot .corner { border-color: #4b9cff; width: 28px; height: 30px; }
+.card .art { position: relative; display: block; width: 168px; height: 154px; margin: 30px auto 0; overflow: visible; }
+.card h3 { position: relative; margin: 22px 0 0; font-family: var(--display); font-weight: 500; font-size: 22px; line-height: 28px; letter-spacing: -0.025em; }
+.card p { position: relative; margin: 14px 0 0; font-size: 13px; line-height: 21.5px; color: #9c9c9c; }
+.art .ln { fill: none; stroke: #474747; stroke-width: 2; transition: stroke .3s; }
+.art .nd { fill: #4a4a4a; transition: fill .3s, transform .3s; transform-box: fill-box; transform-origin: center; }
+.card:hover .art .ln, .card.hot .art .ln { stroke: #5f88b8; }
+.card:hover .art .nd, .card.hot .art .nd { fill: #8fc3ff; animation: nd 1.4s ease-in-out infinite; }
+.card:hover .art .nd:nth-of-type(2n), .card.hot .art .nd:nth-of-type(2n) { animation-delay: .35s; }
+.card:hover .art .nd:nth-of-type(3n), .card.hot .art .nd:nth-of-type(3n) { animation-delay: .7s; }
+@keyframes nd { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.35); } }
+.art .spin { transform-box: fill-box; transform-origin: center; transition: transform 1.2s cubic-bezier(.2,.7,.2,1); }
+.card:hover .art .spin, .card.hot .art .spin { transform: rotate(60deg); }
+.art .hexfill { fill: #bdbdbd; }
+.art .orange { fill: #ff9f1a; }
+.card:hover .art .orange, .card.hot .art .orange { animation: blink .8s steps(1) infinite; }
+@keyframes blink { 50% { fill: #ffd28a; } }
+.art .yellow { fill: #f4ff3a; }
+.art .white { fill: #fff; }
+.art .up { fill: none; stroke: #4a4a4a; stroke-width: 2; stroke-linecap: round; }
+.card:hover .art .up, .card.hot .art .up { stroke: #9a9a9a; animation: rise 1.2s ease-in-out infinite; }
+.card:hover .art .up:nth-of-type(2), .card.hot .art .up:nth-of-type(2) { animation-delay: .2s; }
+.card:hover .art .up:nth-of-type(3), .card.hot .art .up:nth-of-type(3) { animation-delay: .4s; }
+@keyframes rise { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.art .sq { transition: transform .8s cubic-bezier(.2,.7,.2,1); transform-box: fill-box; transform-origin: center; }
+.card:hover .art .sq.a, .card.hot .art .sq.a { transform: translate(-8px, 8px); }
+.card:hover .art .sq.b, .card.hot .art .sq.b { transform: translate(8px, -8px); }
+
+/* ---------- Footer ---------- */
+.foot { height: 643px; overflow: hidden; }
+.vline { position: absolute; top: 0; bottom: 29px; width: 1px; background: #3a3a3a; }
+.cols { position: absolute; left: 240px; top: 136px; display: flex; }
+.cols div { display: flex; flex-direction: column; gap: 8px; }
+.cols div:nth-child(1) { width: 291.5px; }
+.cols div:nth-child(2) { width: 281.75px; }
+.cols div:nth-child(3) { width: 303.88px; }
+.cols h4 { margin: 0 0 8px; font-size: 15px; font-weight: 400; color: #6d6d6d; }
+.cols a { font-size: 15px; line-height: 24px; color: #e8e8e8; transition: color .2s, transform .2s; }
+.cols a:hover { color: var(--blue-l); transform: translateX(3px); }
+.pixel { position: absolute; left: 1231px; top: 28px; display: grid; grid-template-columns: repeat(4, 21px); grid-auto-rows: 21px; }
+.pixel i { background: #ff5cf0; animation: pix 3s steps(1) infinite; }
+.pixel i.e { background: transparent; animation: none; }
+@keyframes pix { 50% { background: #ff9cf6; } }
+.mark { position: absolute; left: 220px; top: 341px; display: flex; align-items: center; gap: 0; cursor: default; }
+.mark svg { width: 133px; height: 157px; }
+.mark svg .dot { fill: #6b6b6b; animation: twinkle 3s ease-in-out infinite; }
+.mark b { font-family: var(--display); font-weight: 500; font-size: 190px; line-height: 154px; letter-spacing: -0.02em; color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.32); background: linear-gradient(100deg, rgba(255,255,255,.05) 30%, rgba(255,255,255,.35) 45%, rgba(255,255,255,.05) 60%) 200% 0 / 300% 100%; -webkit-background-clip: text; background-clip: text; transition: background-position 1.6s ease; }
+.mark:hover b, .foot.in .mark b { background-position: -100% 0; }
+.track { position: absolute; left: 0; right: 0; bottom: 0; height: 29px; overflow: hidden; background: #0b4f27; }
+.track div { position: absolute; top: 0; left: 0; display: flex; width: 2880px; height: 29px; animation: track 18s linear infinite; }
+.track i { position: absolute; top: 0; height: 29px; border-radius: 15px; background: #8ef5c0; }
+@keyframes track { to { transform: translateX(-1440px); } }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .reveal, .hero h1 .w, .tag, .hub { opacity: 1 !important; transform: none !important; filter: none !important; } .wire { stroke-dashoffset: 0 !important; } }
+</style>
+</head>
+<body>
+<div class="page" id="page">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="streakGrad" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".6" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="shieldGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2f8ff"/><stop offset="1" stop-color="#8ec5ff"/></linearGradient>
+    <symbol id="arrow" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></symbol>
+    <symbol id="chev" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></symbol>
+    <symbol id="bolt" viewBox="0 0 16 16"><path fill="currentColor" d="M12.3 6.2A4.5 4.5 0 0 0 3.6 7 3 3 0 0 0 4 13h7.5a3.4 3.4 0 0 0 .8-6.8Zm-3.6 5.3.4-2.2H7.4l1.7-3.4-.4 2.2h1.7Z"/></symbol>
+    <symbol id="hex" viewBox="0 0 52 52"><path d="M26 3 46 14.5v23L26 49 6 37.5v-23Z"/></symbol>
+  </defs>
+</svg>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="bars" id="bars"></div>
+  <header class="nav">
+    <a class="logo" href="#hero"><svg class="dotshield" data-cols="5" data-rows="7" viewBox="0 0 22 28" aria-hidden="true"></svg>VitaShield</a>
+    <nav class="menu" aria-label="Main">
+      <div><a class="item active" href="#hero">Home</a></div>
+      <div class="dd"><button class="item" type="button" aria-expanded="false">Product <svg class="chev"><use href="#chev"/></svg></button>
+        <div class="drop"><a href="#trust">Decentralized Security Services<small>Automated auditing for smart contracts</small></a><a href="#who">AI Agent Control<small>Real-time access control for AI operations</small></a></div></div>
+      <div><a class="item" href="#trust">Pricing</a></div>
+      <div class="dd"><button class="item" type="button" aria-expanded="false">Documentation <svg class="chev"><use href="#chev"/></svg></button>
+        <div class="drop"><a href="#foot">Documentation<small>Guides and API reference</small></a><a href="#foot">Roadmap<small>What we're building next</small></a></div></div>
+      <div><a class="item" href="#foot">Blog</a></div>
+    </nav>
+    <button class="btn white cta" type="button">Free tier signup <svg class="arrow"><use href="#arrow"/></svg></button>
+  </header>
+  <a class="pill" href="#logos">Trusted by scaling teams worldwide <svg class="arrow"><use href="#arrow"/></svg></a>
+  <div class="hero-copy">
+    <h1 id="headline">Security Infrastructure For The Age Of Autonomous Systems</h1>
+    <p class="reveal">Enterprise-grade security for blockchain applications and AI agents. Automated auditing for smart contracts. Real-time access control for AI operations in regulated environments.</p>
+    <div class="hero-btns reveal"><button class="btn dark" type="button">Demo request <svg class="arrow"><use href="#arrow"/></svg></button><button class="btn blue" type="button">Free tier signup <svg class="arrow"><use href="#arrow"/></svg></button></div>
+  </div>
+  <div class="circuit">
+    <svg class="side l" viewBox="0 0 562 317" aria-hidden="true"></svg>
+    <svg class="side r" viewBox="0 0 562 317" aria-hidden="true"></svg>
+    <div class="shield-wrap" title="Protected">
+      <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+      <svg class="shield" id="shield" viewBox="0 0 118 140" aria-hidden="true">
+        <path d="M59 4 110 22v42c0 34-22 58-51 72C30 122 8 98 8 64V22Z" fill="url(#shieldGrad)" stroke="rgba(255,255,255,.6)" stroke-width="1.5"/>
+      </svg>
+    </div>
+  </div>
+  <div class="logos" id="logos">
+    <img src="logos/givaudan.png" alt="Givaudan" width="173" height="60">
+    <img src="logos/beacons.png" alt="Beacons" width="164" height="60">
+    <img src="logos/google.png" alt="Google" width="123" height="60">
+    <img src="logos/drom.png" alt="Drom Fragrances" width="132" height="60">
+    <img src="logos/amazon.png" alt="Amazon" width="123" height="60">
+    <img src="logos/godaddy.png" alt="GoDaddy" width="202" height="60">
+  </div>
+</section>
+
+<!-- Who this platform is for -->
+<section class="who dots-bg" id="who">
+  <div class="who-copy">
+    <h2 class="reveal">Who This Platform Is For</h2>
+    <p class="reveal">Shift security left, and enforce it live: Prevent catastrophic failures before deployment—and stop unsafe actions in real time.</p>
+  </div>
+  <button class="btn white reveal" type="button">Demo request <svg class="arrow"><use href="#arrow"/></svg></button>
+  <svg class="wires" viewBox="0 0 1440 926" aria-hidden="true">
+    <g id="wireset">
+      <path data-k="a" d="M105 301 H182"/>
+      <path data-k="a" d="M300 330 V403"/>
+      <path data-k="b" d="M300 439 V503 Q300 527 324 527 H365"/>
+      <path data-k="b" d="M588 527 H612 Q636 527 636 551 V788"/>
+      <path data-k="c" d="M1210 289 H1300"/>
+      <path data-k="c" d="M1118 317 V410"/>
+      <path data-k="d" d="M1118 446 V489 Q1118 513 1094 513 H1034"/>
+      <path data-k="d" d="M770 513 H742 Q718 513 718 537 V728"/>
+      <path data-k="e" d="M718 764 V788"/>
+    </g>
+  </svg>
+  <div class="tag" data-k="a" style="--c:#ff6b6b; left:182px; top:274px; width:201px">Regulated Fintechs &amp; Digital Asset Firms</div>
+  <div class="tag" data-k="b" style="--c:#d8f59b; left:365px; top:500px; width:223px">Enterprises Deploying LLM Agents Internally</div>
+  <div class="tag" data-k="c" style="--c:#5ef0b0; left:990px; top:262px; width:220px">Web3 Protocols And Infrastructure Providers</div>
+  <div class="tag" data-k="d" style="--c:#8fb6ff; left:770px; top:486px; width:264px">AI Startups Operating Under Compliance Constraints</div>
+  <div class="tag" data-k="e" style="--c:#ffa531; left:587px; top:788px; width:265px">Security, Compliance, And Platform Engineering Teams</div>
+  <button class="hub" type="button" data-k="a" style="left:69px; top:283px" aria-label="Fintech connection"><svg><use href="#bolt"/></svg></button>
+  <button class="hub" type="button" data-k="a" style="left:282px; top:403px" aria-label="Fintech connection"><svg><use href="#bolt"/></svg></button>
+  <button class="hub" type="button" data-k="c" style="left:1300px; top:269px" aria-label="Protocol connection"><svg><use href="#bolt"/></svg></button>
+  <button class="hub" type="button" data-k="c" style="left:1100px; top:410px" aria-label="Protocol connection"><svg><use href="#bolt"/></svg></button>
+  <button class="hub" type="button" data-k="e" style="left:700px; top:728px" aria-label="Security team connection"><svg><use href="#bolt"/></svg></button>
+</section>
+
+<!-- Value proposition -->
+<section class="value" id="value">
+  <svg class="lines" viewBox="0 0 1440 420" aria-hidden="true">
+    <path class="rail" d="M832 205 L878 247 Q884 252 893 252 H1440"/>
+    <path class="rail" d="M832 340 L878 274 Q882 268 891 268 H1440"/>
+    <path class="rail" d="M608 205 L562 247 Q556 252 547 252 H0"/>
+    <path class="rail" d="M608 340 L562 274 Q558 268 549 268 H0"/>
+    <path class="streak" d="M893 252 H1440"/>
+    <path class="streak" style="animation-delay:-1.7s" d="M891 268 H1440"/>
+    <path class="streak" style="animation-delay:-.9s" d="M547 252 H0"/>
+    <path class="streak" style="animation-delay:-2.5s" d="M549 268 H0"/>
+  </svg>
+  <div class="sparkle"><svg viewBox="0 0 135 152" id="sparkle" aria-hidden="true"></svg></div>
+  <div class="lock" id="lock">
+    <div class="shackle"></div>
+    <div class="body"><div class="pad" id="pad"></div></div>
+  </div>
+  <div class="code" id="code"><i></i><i></i><i></i><i></i></div>
+  <div class="code-hint">Tap the keypad</div>
+  <div class="cells" id="cells"></div>
+  <div class="value-copy">
+    <h2 class="reveal">Value Proposition</h2>
+    <p class="reveal">As blockchain dApps and AI agents become critical infrastructure, security can't be an afterthought. Our platform provides continuous security validation for smart contracts and runtime governance for AI agents purpose-built for teams that can't afford vulnerabilities or compliance failures.</p>
+  </div>
+</section>
+
+<!-- Trust & security -->
+<section class="trust" id="trust">
+  <div class="trust-head">
+    <h2 class="reveal">Trust &amp; Security (SOC 2, Infrastructure Security)</h2>
+    <p class="reveal">Modern systems no longer fail because of firewalls alone. They fail because code, contracts, and AI agents act autonomously often without sufficient guardrails.</p>
+  </div>
+  <button class="btn blue" type="button">Demo request <svg class="arrow"><use href="#arrow"/></svg></button>
+
+  <article class="card reveal" style="left:100px; top:237px">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <svg class="art" viewBox="0 0 180 165" aria-hidden="true">
+      <path class="ln sq a" d="M20 30 H120 V150 H20 Z"/><path class="ln sq b" d="M55 15 H160 V135 H55 Z"/>
+      <path class="ln" d="M90 50 L118 66 V98 L90 114 L62 98 V66 Z M90 50 V82 M62 66 L90 82 L118 66"/>
+      <rect class="nd" x="85" y="45" width="10" height="10"/><rect class="nd" x="113" y="61" width="10" height="10"/><rect class="nd" x="113" y="93" width="10" height="10"/><rect class="nd" x="85" y="109" width="10" height="10"/><rect class="nd" x="57" y="93" width="10" height="10"/><rect class="nd" x="57" y="61" width="10" height="10"/><rect class="nd" x="85" y="77" width="10" height="10"/><rect class="nd" x="155" y="25" width="10" height="10"/><rect class="nd" x="155" y="130" width="10" height="10"/>
+    </svg>
+    <h3>SOC 2–Aligned Security Framework</h3>
+    <p>Vitashield follows a SOC 2–aligned security program designed to protect customer data and system integrity across the full lifecycle of blockchain and AI operations. Our controls cover access management, incident response, change management, and operational resilience, ensuring our platform meets enterprise-grade expectations for confidentiality, integrity, and availability.</p>
+  </article>
+
+  <article class="card reveal" style="left:534px; top:237px">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <svg class="art" viewBox="0 0 180 165" aria-hidden="true">
+      <path class="ln" d="M30 15 H150 V150 H30 Z M62 48 H118 V116 H62 Z"/>
+      <circle class="nd" cx="30" cy="15" r="6"/><circle class="nd" cx="90" cy="15" r="4"/><circle class="nd" cx="150" cy="15" r="6"/><circle class="nd" cx="30" cy="82" r="4"/><circle class="nd" cx="150" cy="82" r="4"/><circle class="nd" cx="30" cy="150" r="6"/><circle class="nd" cx="90" cy="150" r="4"/><circle class="nd" cx="150" cy="150" r="6"/>
+      <circle class="nd" cx="62" cy="48" r="5"/><circle class="nd" cx="118" cy="48" r="5"/><circle class="nd" cx="62" cy="116" r="5"/><circle class="nd" cx="118" cy="116" r="5"/><circle class="nd" cx="90" cy="48" r="3.5"/><circle class="nd" cx="90" cy="116" r="3.5"/>
+    </svg>
+    <h3>Secure Development &amp; Deployment Pipeline</h3>
+    <p>Security is embedded into our engineering process. All code changes pass through automated testing, peer review, and vulnerability scanning before deployment. Our deployment pipeline ensures reproducibility, auditability, and rollback safety</p>
+  </article>
+
+  <article class="card reveal" style="left:969px; top:237px">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <svg class="art" viewBox="0 0 180 165" aria-hidden="true">
+      <g class="spin">
+        <path class="ln" d="M90 10 L157 48 V122 L90 160 L23 122 V48 Z M90 10 V60 M157 48 L113 72 M157 122 L113 98 M90 160 V110 M23 122 L67 98 M23 48 L67 72"/>
+        <circle class="nd" cx="90" cy="10" r="5"/><circle class="nd" cx="157" cy="48" r="5"/><circle class="nd" cx="157" cy="122" r="5"/><circle class="nd" cx="90" cy="160" r="5"/><circle class="nd" cx="23" cy="122" r="5"/><circle class="nd" cx="23" cy="48" r="5"/>
+      </g>
+      <path class="ln" d="M90 58 L114 72 V98 L90 112 L66 98 V72 Z" fill="#2e2e2e"/>
+      <path class="hexfill" d="M90 68 L105 76.5 V93.5 L90 102 L75 93.5 V76.5 Z"/>
+    </svg>
+    <h3>Independent Security Assessments</h3>
+    <p>Vitashield undergoes regular third-party audits and penetration testing to validate our security posture. External security experts continuously challenge our assumptions and defenses, helping us maintain a platform that meets the expectations of financial institutions.</p>
+  </article>
+
+  <article class="card reveal" style="left:100px; top:765px">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <svg class="art" viewBox="0 0 180 165" aria-hidden="true">
+      <path class="ln" d="M50 12 L100 22 L150 40 L162 85 L150 105 L120 140 L100 160 L18 130 L42 68 Z M50 12 L42 68 L100 85 L150 40 M100 22 L100 85 L162 85 M42 68 L18 130 M100 85 L120 140 M100 85 L18 130 M100 85 L150 105 M50 12 L80 70 L120 140"/>
+      <rect class="nd" x="44" y="6" width="12" height="12"/><rect class="nd" x="94" y="16" width="12" height="12"/><rect class="nd" x="144" y="34" width="12" height="12"/><rect class="nd" x="157" y="80" width="10" height="10"/><rect class="nd" x="144" y="99" width="12" height="12"/><rect class="nd" x="114" y="134" width="12" height="12"/><rect class="nd" x="94" y="154" width="12" height="12"/><rect class="nd" x="12" y="124" width="12" height="12"/><rect class="nd" x="36" y="62" width="12" height="12"/><rect class="nd" x="94" y="79" width="12" height="12"/><rect class="nd" x="75" y="65" width="10" height="10"/>
+    </svg>
+    <h3>Hardened Infrastructure By Design</h3>
+    <p>Vitashield infrastructure is built on hardened cloud architecture with strict network segmentation, least-privilege access controls, and continuous monitoring. Every component is deployed using secure-by-default configurations to minimize attack surfaces and prevent unauthorized system interactions — critical for autonomous blockchain and AI workloads.</p>
+  </article>
+
+  <article class="card reveal" style="left:534px; top:765px">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <svg class="art" viewBox="0 0 180 165" aria-hidden="true">
+      <path class="ln sq b" d="M62 15 H150 V103 H62 Z"/>
+      <path class="ln" d="M46 31 H134 V119 H46 Z"/>
+      <path class="ln sq a" d="M30 47 H118 V135 H30 Z"/>
+      <rect class="nd" x="144" y="9" width="13" height="13"/><rect class="nd" x="24" y="129" width="13" height="13"/>
+      <rect class="orange" x="80" y="65" width="16" height="16"/>
+    </svg>
+    <h3>Continuous Monitoring &amp; Threat Detection</h3>
+    <p>We operate real-time security monitoring across infrastructure and platform layers. Automated anomaly detection identifies unusual behavior in smart contracts, AI agents, and system activity before it escalates. This allows us to respond proactively to threats instead of reacting after damage occurs.</p>
+  </article>
+
+  <article class="card reveal" style="left:969px; top:765px">
+    <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <svg class="art" viewBox="0 0 180 165" aria-hidden="true">
+      <rect class="nd" x="38" y="14" width="18" height="18"/><rect class="white" x="132" y="14" width="18" height="18"/><rect class="nd" x="84" y="48" width="18" height="18"/>
+      <path class="ln" d="M22 92 H168"/>
+      <rect class="yellow" x="10" y="83" width="18" height="18"/><rect class="yellow" x="160" y="83" width="18" height="18"/>
+      <g><path class="up" d="M40 150 V118 M34 124 L40 118 L46 124"/><path class="up" d="M72 140 V108 M66 114 L72 108 L78 114"/><path class="up" d="M108 140 V108 M102 114 L108 108 L114 114"/><path class="up" d="M142 152 V120 M136 126 L142 120 L148 126"/></g>
+    </svg>
+    <h3>Governance, Compliance &amp; Audit Readiness</h3>
+    <p>We design our systems for audit transparency. Detailed logging, immutable audit trails, and policy-driven access governance allow organizations to meet regulatory and compliance requirements with confidence.</p>
+  </article>
+</section>
+
+<!-- Footer -->
+<footer class="foot dots-bg" id="foot">
+  <i class="vline" style="left:100px"></i><i class="vline" style="left:1340px"></i>
+  <div class="pixel" aria-hidden="true"><i></i><i class="e"></i><i class="e"></i><i class="e"></i><i class="e"></i><i></i><i class="e"></i><i></i><i></i><i class="e"></i><i></i><i class="e"></i></div>
+  <div class="cols">
+    <div><h4>Company</h4><a href="#trust">Pricing</a><a href="#who">How it works</a></div>
+    <div><h4>Resources</h4><a href="#foot">Documentation</a><a href="#foot">Roadmap</a></div>
+    <div><h4>Ecosystem</h4><a href="#foot">Terms &amp; Conditions</a><a href="#foot">Cookie Policy</a></div>
+    <div><h4>Connect</h4><a href="#foot">X(Twitter)</a><a href="#foot">LinkedIn</a></div>
+  </div>
+  <div class="mark"><svg class="dotshield big" data-cols="7" data-rows="9" viewBox="0 0 133 157" aria-hidden="true"></svg><b>Vitashield</b></div>
+  <div class="track" aria-hidden="true"><div id="track"></div></div>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var cover = params.get('mode') === 'cover';
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var page = document.getElementById('page');
+  var NS = 'http://www.w3.org/2000/svg';
+  if (cover) document.body.classList.add('cover');
+
+  // Fit the 1440px design to the frame: scale down to fit narrower frames, centre on wider ones.
+  var scale = 1;
+  function fit() {
+    var w = document.documentElement.clientWidth;
+    scale = Math.min(1, w / 1440);
+    page.style.transform = 'scale(' + scale + ')';
+    page.style.left = Math.max(0, (w - 1440) / 2) + 'px';
+    document.body.style.height = Math.ceil(page.offsetHeight * scale) + 'px';
+  }
+  fit();
+  addEventListener('resize', fit);
+
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+
+  // Hero: stepped light columns hanging from the top (from the design's bar groups).
+  var bars = document.getElementById('bars');
+  [[-240,186,770],[-54,186,583],[132,185,395],[316,186,257],[502,186,192],[887,199,166],[1086,199,257],[1282,197,395],[1481,199,583],[1680,199,770]].forEach(function (b, i) {
+    var d = document.createElement('i'); d.className = 'bar';
+    d.style.cssText = 'left:' + b[0] + 'px;width:' + b[1] + 'px;height:' + b[2] + 'px;animation-delay:' + (-i * .7) + 's';
+    bars.appendChild(d);
+  });
+
+  // Hero headline: words rise in one after another.
+  var h1 = document.getElementById('headline');
+  h1.innerHTML = h1.textContent.split(' ').map(function (w, i) { return '<span class="w" style="animation-delay:' + (.15 + i * .07) + 's">' + w + '</span>'; }).join(' ');
+
+  // Dotted shield marks (logo and footer wordmark): dots on a grid, kept inside a shield outline.
+  document.querySelectorAll('.dotshield').forEach(function (svg) {
+    var vb = svg.viewBox.baseVal, cols = +svg.dataset.cols, rows = +svg.dataset.rows, big = svg.classList.contains('big');
+    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+      var u = (c + .5) / cols * 2 - 1, v = (r + .5) / rows;
+      var half = v < .45 ? 1 : 1 - Math.pow((v - .45) / .58, 1.4);
+      if (Math.abs(u) > half) continue;
+      var rad = (big ? 5.5 : 1.3) * (0.55 + 0.45 * (1 - Math.abs(u))) * (big && (r + c) % 3 === 0 ? 1.3 : 1);
+      el('circle', { 'class': 'dot', cx: (c + .5) / cols * vb.width, cy: (r + .5) / rows * vb.height, r: rad, style: big ? 'animation-delay:' + (-((r * 7 + c * 3) % 10) * .3) + 's' : '' }, svg).style.fill = big ? '' : '#cfe5ff';
+    }
+  });
+
+  // Hero shield: a field of dots narrowing to a point, like the design's shield.
+  var shield = document.getElementById('shield');
+  for (var r = 0; r < 8; r++) for (var c = 0; c < 7; c++) {
+    var half = r < 3 ? 3 : 3 - (r - 2) * .55;
+    if (Math.abs(c - 3) > half) continue;
+    el('circle', { 'class': 'dot', cx: 29 + c * 10, cy: 36 + r * 10, r: 2.6, style: 'fill:#2a7fd6;animation-delay:' + (-((r * 5 + c * 3) % 9) * .27) + 's' }, shield);
+  }
+
+  // Hero circuits: dotted traces with nodes, and light sparks running in towards the shield.
+  var traces = ['M0 158 H530', 'M0 30 H110 L150 70 H250 L338 158', 'M95 98 H200 L260 158', 'M35 118 H140 L180 158', 'M0 200 H120 L165 245 H300', 'M110 288 H200 L250 238 H380 L460 158', 'M150 228 H280', 'M0 250 H60 L100 290 H180', 'M200 70 H300 L360 130'];
+  document.querySelectorAll('.circuit svg.side').forEach(function (svg) {
+    traces.forEach(function (d, i) {
+      el('path', { 'class': 'trace', d: d }, svg);
+      if (i < 6) el('path', { 'class': 'spark', d: d, style: 'animation-delay:' + (-i * .55) + 's;animation-duration:' + (2.6 + (i % 3) * .5) + 's' }, svg);
+      var m = d.match(/M(\d+) (\d+)/);
+      el('circle', { 'class': 'node', cx: m[1], cy: m[2], r: 3 }, svg);
+    });
+    el('circle', { 'class': 'node', cx: 530, cy: 158, r: 3.5 }, svg);
+  });
+
+  // Who: measure wire lengths so they draw in, and add a light pulse on each.
+  var wires = document.getElementById('wireset');
+  [].slice.call(wires.children).forEach(function (p, i) {
+    var len = Math.ceil(p.getTotalLength());
+    p.setAttribute('class', 'wire');
+    p.style.setProperty('--len', len);
+    var pulse = el('path', { 'class': 'pulse', d: p.getAttribute('d'), 'data-k': p.dataset.k, style: 'animation-delay:' + (-i * .45) + 's' }, wires);
+  });
+  // Hovering a group lights up its tags, hubs and wires together.
+  var who = document.getElementById('who');
+  function hot(k, on) {
+    who.querySelectorAll('[data-k="' + k + '"]').forEach(function (n) { n.classList.toggle('hot', on); if (n.tagName === 'path') n.style.stroke = on ? '#9fd2ff' : ''; });
+  }
+  who.querySelectorAll('.tag, .hub').forEach(function (n) {
+    n.addEventListener('mouseenter', function () { hot(n.dataset.k, true); });
+    n.addEventListener('mouseleave', function () { hot(n.dataset.k, false); });
+  });
+
+  // Value: keypad from the design (7 3 4 / 3 1 9 / 2 8 6); four taps unlock the lock.
+  var value = document.getElementById('value'), pad = document.getElementById('pad'), codeBars = document.querySelectorAll('#code i'), entered = [];
+  '734319286'.split('').forEach(function (n) {
+    var b = document.createElement('button'); b.className = 'key'; b.type = 'button'; b.setAttribute('aria-label', 'Key ' + n);
+    b.innerHTML = '<svg aria-hidden="true"><use href="#hex"/></svg><span>' + n + '</span>';
+    b.addEventListener('click', function () { press(b); });
+    pad.appendChild(b);
+  });
+  function press(b) {
+    if (value.classList.contains('unlocked')) return;
+    b.classList.add('on'); setTimeout(function () { b.classList.remove('on'); }, 260);
+    entered.push(b.textContent);
+    codeBars.forEach(function (c, i) { c.classList.toggle('f', i < entered.length); });
+    if (entered.length === 4) {
+      setTimeout(function () { value.classList.add('unlocked'); }, 250);
+      setTimeout(function () { value.classList.remove('unlocked'); entered = []; codeBars.forEach(function (c) { c.classList.remove('f'); }); }, 2800);
+    }
+  }
+  var cells = document.getElementById('cells');
+  for (var i = 0; i < 20; i++) { var c = document.createElement('i'); c.style.animationDelay = (-((i * 7) % 11) * .25) + 's'; cells.appendChild(c); }
+  var sp = document.getElementById('sparkle');
+  for (var r = 0; r < 9; r++) for (var c = 0; c < 6; c++) { if ((r + c) % 2 || Math.abs(c * 22 - r * 9 - 30) > 55) continue; el('circle', { cx: 12 + c * 22 + (r % 2) * 4, cy: 10 + r * 16, r: 5.5, style: 'animation-delay:' + (-((r + c * 3) % 7) * .3) + 's' }, sp); }
+
+  // Footer: sliding mint track.
+  var track = document.getElementById('track');
+  [[-41,265],[398,265],[841,127],[1192,265]].forEach(function (p) { [0, 1440].forEach(function (o) { var t = document.createElement('i'); t.style.left = (p[0] + o) + 'px'; t.style.width = p[1] + 'px'; track.appendChild(t); }); });
+
+  // Nav dropdowns open on hover or click.
+  document.querySelectorAll('.dd').forEach(function (dd) {
+    var btn = dd.querySelector('button');
+    function set(on) { dd.classList.toggle('open', on); btn.setAttribute('aria-expanded', on); }
+    dd.addEventListener('mouseenter', function () { set(true); });
+    dd.addEventListener('mouseleave', function () { set(false); });
+    btn.addEventListener('click', function () { set(!dd.classList.contains('open')); });
+  });
+
+  // In-page links scroll smoothly (the page is scaled, so positions are scaled too).
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) { var t = document.querySelector(a.getAttribute('href')); if (!t) return; e.preventDefault(); glide(t.offsetTop * scale, 900); });
+  });
+
+  // Reveal sections as they come into view.
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); if (e.target.classList.contains('reveal')) io.unobserve(e.target); } }); }, { threshold: .15 });
+  document.querySelectorAll('.reveal, #who, #foot').forEach(function (n) { io.observe(n); });
+
+  function ease(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function glide(to, ms, done) {
+    var from = scrollY, start = performance.now();
+    if (reduce) { scrollTo(0, to); if (done) done(); return; }
+    (function step(now) { var t = Math.min(1, (now - start) / ms); scrollTo(0, from + (to - from) * ease(t)); if (t < 1) requestAnimationFrame(step); else if (done) done(); })(start);
+  }
+
+  // Cover mode: a looping tour, like a product video, for the portfolio cover.
+  if (!cover || reduce) return;
+  var cards = document.querySelectorAll('.card');
+  function top(id) { return document.getElementById(id).offsetTop; }
+  function maxScroll() { return document.body.scrollHeight - innerHeight; }
+  function cycle(list, each) { list.forEach(function (n, i) { setTimeout(function () { list.forEach(function (o) { o.classList.remove('hot'); }); n.classList.add('hot'); }, i * each); }); setTimeout(function () { list.forEach(function (o) { o.classList.remove('hot'); }); }, list.length * each); }
+  var steps = [
+    { to: function () { return 0; }, hold: 3600 },
+    { to: function () { return top('who') * scale; }, hold: 4200, run: function () { ['a', 'c', 'b', 'd', 'e'].forEach(function (k, i) { setTimeout(function () { hot(k, true); setTimeout(function () { hot(k, false); }, 700); }, 300 + i * 750); }); } },
+    { to: function () { return (top('value') + 20) * scale; }, hold: 4200, run: function () { var keys = pad.querySelectorAll('.key'); [0, 4, 2, 6].forEach(function (k, i) { setTimeout(function () { press(keys[k]); }, 500 + i * 380); }); } },
+    { to: function () { return (top('trust') + 150) * scale; }, hold: 3800, run: function () { cycle([cards[0], cards[1], cards[2]], 1100); } },
+    { to: function () { return (top('trust') + 680) * scale; }, hold: 3800, run: function () { cycle([cards[3], cards[4], cards[5]], 1100); } },
+    { to: maxScroll, hold: 3000 },
+  ];
+  var s = 0;
+  function next() {
+    var st = steps[s];
+    glide(st.to(), s === 0 ? 1600 : 1300, function () {
+      if (st.run) st.run();
+      setTimeout(function () { s = (s + 1) % steps.length; next(); }, st.hold);
+    });
+  }
+  setTimeout(next, 200);
+})();
+</script>
+</body>
+</html>

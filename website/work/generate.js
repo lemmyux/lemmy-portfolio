@@ -40,6 +40,15 @@ function shot(slug, file, alt, eager) {
   return `<figure class="shot">${img}</figure>`;
 }
 
+// A case study's interactive prototype in a browser-style frame, scrollable and clickable in place.
+function live(p) {
+  return `<figure class="live-proto">
+        <div class="live-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span class="live-label"><span class="dot" aria-hidden="true"></span>Live prototype · ${esc(p.proto.label)}</span><a class="live-open" href="../${p.proto.src}" target="_blank" rel="noopener">Open full screen <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
+        <iframe src="../${p.proto.src}?mode=embed" title="${esc(p.title)} ${esc(p.proto.label.toLowerCase())}, interactive prototype"></iframe>
+        <figcaption>${esc(p.proto.hint)}</figcaption>
+      </figure>`;
+}
+
 function lift(site, cfg) {
   const home = fs.readFileSync(path.join(WEBSITE, site.page), 'utf8');
   return {
@@ -57,7 +66,8 @@ function page(site, p, next) {
   const { fontLink, tokens, fxCss, soundBtn, fxJs, soundJs } = lift(site, { glitch: '.next-title', scramble: '.nav a, .back, .notion' });
 
   const meta = Object.entries(p.meta).map(([k, v]) => `<div${k === 'Scope' ? ' class="wide"' : ''}><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('\n          ');
-  const groups = p.groups.map(g => `
+  const skip = p.proto ? p.proto.replaces : [];
+  const groups = p.groups.map(g => ({ ...g, shots: g.shots.filter(([f]) => !skip.includes(f)) })).filter(g => g.shots.length).map(g => `
       <section class="group" aria-label="${esc(g.name)}">
         <header class="group-head"><h3>${esc(g.name)}</h3><p>${esc(g.text)}</p></header>
         ${g.shots.map(([f, alt]) => shot(p.slug, f, alt, false)).join('\n        ')}
@@ -130,6 +140,17 @@ h1 { margin: 0; font-weight: 500; font-size: clamp(40px, 4.2vw, 64px); line-heig
 .shot.tall { position: relative; max-height: min(86vh, 980px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
 .shot.tall .hint { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; padding: 10px 14px; background: color-mix(in srgb, var(--bg) 82%, transparent); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 
+.live-proto { margin: 0; overflow: hidden; background: var(--panel-c); border: 1px solid var(--line); border-radius: var(--panel-r); }
+.live-bar { display: flex; align-items: center; gap: 14px; padding: 10px 14px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.lights { display: flex; gap: 6px; }
+.lights i { width: 9px; height: 9px; border-radius: 50%; background: #2c2c2c; }
+.live-label { display: inline-flex; align-items: center; gap: 8px; }
+.live-open { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; color: var(--fg); transition: color .15s; }
+.live-open:hover { color: var(--accent); }
+.live-open:hover .ico { transform: translate(2px, -2px); }
+.live-proto iframe { display: block; width: 100%; aspect-ratio: 16 / 10; border: 0; background: #000; }
+.live-proto figcaption { padding: 10px 14px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+
 .next { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); align-items: center; gap: 28px; padding: 28px; background: var(--panel-c); border: 1px solid var(--line); border-radius: var(--panel-r); transition: border-color .2s; }
 .next:hover { border-color: var(--accent); }
 .next-label { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
@@ -147,6 +168,8 @@ h1 { margin: 0; font-weight: 500; font-size: clamp(40px, 4.2vw, 64px); line-heig
   .info-inner { position: static; max-height: none; overflow: visible; padding: 28px max(16px, env(safe-area-inset-right, 0px)) 36px max(16px, env(safe-area-inset-left, 0px)); }
   .gallery { gap: 48px; padding: 16px max(16px, env(safe-area-inset-right, 0px)) 64px max(16px, env(safe-area-inset-left, 0px)); }
   .next { grid-template-columns: 1fr; padding: 20px; }
+  .live-proto iframe { aspect-ratio: 4 / 5; }
+  .live-label { display: none; }
   .spacer, .clock { display: none; }
   .nav { gap: 16px; padding-inline: 16px; overflow-x: auto; }
   .seg:first-child { padding-left: max(16px, env(safe-area-inset-left, 0px)); }
@@ -194,7 +217,7 @@ ${soundBtn}
   </aside>
 
   <div class="gallery">
-      ${shot(p.slug, p.hero.src, p.hero.alt, true)}
+      ${p.proto ? live(p) : shot(p.slug, p.hero.src, p.hero.alt, true)}
 ${groups}
       <a class="next" href="${next.slug}.html">
         <div><span class="next-label">Next project <svg class="ico" aria-hidden="true"><use href="#i-right"/></svg></span><strong class="next-title">${esc(next.title)}</strong></div>

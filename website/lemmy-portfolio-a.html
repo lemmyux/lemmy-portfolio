@@ -97,6 +97,11 @@ footer { padding-top: 40px; display: flex; flex-direction: column; gap: 34px; ov
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
+/* Live covers: an interactive prototype plays over the still cover once it has loaded. */
+.live { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; opacity: 0; pointer-events: none; transition: opacity .8s, transform .6s cubic-bezier(.2,.7,.2,1); }
+.live.ready { opacity: 1; }
+.cover { position: relative; }
+.show:hover .cover .live { transform: scale(1.03); }
 /* Cyber FX: boot loader and hover glitch. Colours come from the page's own --accent. */
 :root { --fx-alt: #ff2bd6; }
 .fx-boot { position: fixed; inset: 0; z-index: 100; display: flex; align-items: flex-end; background: var(--bg); color: var(--muted); font-family: var(--mono); font-size: 13px; line-height: 1.8; cursor: pointer; padding: max(24px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) max(40px, env(safe-area-inset-bottom, 0px)) max(24px, env(safe-area-inset-left, 0px)); transition: transform .55s cubic-bezier(.7,0,.3,1); animation: fx-boot-failsafe 0s 3s forwards; }
@@ -207,7 +212,7 @@ a:hover .fx-glitch::after, a:focus-visible .fx-glitch::after, .giant:hover .fx-g
       <div class="caption"><strong>SOIN: Attention Market</strong><span>AI social intelligence · Crypto · India, 2025 <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
     </a>
     <a class="show" href="work/vitashield.html">
-      <div class="cover" style="--pos: 50% 35%"><img src="img/vitashield.jpg" alt="VitaShield website hero: Security Infrastructure For The Age Of Autonomous Systems" width="2400" height="1706" loading="lazy"></div>
+      <div class="cover" style="--pos: 50% 35%"><img src="img/vitashield.jpg" alt="VitaShield website hero: Security Infrastructure For The Age Of Autonomous Systems" width="2400" height="1706" loading="lazy"><iframe class="live" data-src="proto/vitashield/index.html?mode=cover" title="VitaShield landing page prototype" tabindex="-1" aria-hidden="true" loading="lazy"></iframe></div>
       <div class="caption"><strong>VitaShield</strong><span>Website &amp; pitch deck · Trust infrastructure · UK, 2026 <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></span></div>
     </a>
     <a class="show" href="work/soin-talent-marketplace.html">
@@ -247,6 +252,16 @@ a:hover .fx-glitch::after, a:focus-visible .fx-glitch::after, .giant:hover .fx-g
 })();
 </script>
 
+<script>
+/* Live covers: load each cover's prototype (skipped for reduced motion) and fade it in over the still image. */
+(function () {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('iframe.live[data-src]').forEach(function (f) {
+    f.addEventListener('load', function () { setTimeout(function () { f.classList.add('ready'); }, 400); });
+    f.src = f.getAttribute('data-src');
+  });
+})();
+</script>
 <script>
 /* Cyber FX: boot sequence, headline decode, hover scramble and glitch. */
 (function () {

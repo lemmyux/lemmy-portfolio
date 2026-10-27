@@ -1,6 +1,6 @@
 #!/bin/sh
 # Builds standalone Vercel sites for portfolio variations A and B from ../lemmy-portfolio-*.html,
-# plus each site's Gallery and About pages, case study pages (../work/<site>/*.html, made by ../work/generate.js) and their images.
+# plus each site's interactive prototypes (../proto), Gallery and About pages, case study pages (../work/<site>/*.html, made by ../work/generate.js) and their images.
 # The artifact pages omit <!doctype>/<html>/<head>, so each page is wrapped in a full document here.
 set -e
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -29,6 +29,7 @@ build() {
   wrap "$SRC/about/$key.html" "$out/about.html"
   wrap "$SRC/gallery/$key.html" "$out/gallery.html"
   cp -R "$SRC/img/work" "$out/img/work"
+  rm -rf "$out/proto"; cp -R "$SRC/proto" "$out/proto"
   cp -R "$SRC/img/thumbs" "$out/img/thumbs"
   if [ -d "$SRC/img/gallery" ]; then cp -R "$SRC/img/gallery" "$out/img/gallery"; fi
 }

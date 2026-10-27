@@ -49,6 +49,8 @@ module.exports = [
     outcome: 'A story that makes cryptographic verification approachable. Visitors see the problem, the core concept and the platform\'s capabilities (digital identity, document verification, blockchain security, AI trust and compliance) in a single scroll.',
     notion: 'https://www.notion.so/39d756d6b84980e4a1c3f2cda1f00fa6',
     hero: { src: '94.jpg', alt: 'VitaShield homepage hero: Security Infrastructure For The Age Of Autonomous Systems' },
+    // Interactive prototype shown in place of the listed screenshots on the case study page (website/proto/).
+    proto: { src: 'proto/vitashield/index.html', label: 'Landing page', hint: 'Scroll inside the frame, open the menus, hover the cards and tap the lock keypad.', replaces: ['94.jpg', '87.jpg'] },
     groups: [
       { name: 'Homepage', text: 'The full homepage, from the security-infrastructure promise to the trusted-by logos.', shots: [['87.jpg', 'VitaShield homepage, full page']] },
       { name: 'Product pages', text: 'Service and AI-agent pages that explain each capability in plain language.', shots: [['95.jpg', 'Decentralised security services page, full page'], ['96.jpg', 'AI agents control page, full page']] },
