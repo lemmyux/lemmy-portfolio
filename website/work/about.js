@@ -41,6 +41,6 @@ module.exports = {
     ['LinkedIn', 'https://www.linkedin.com/in/ugochukwu-lemmy-1ab9521b3/'],
     ['X', 'https://x.com/lemmyux'],
     ['Dribbble', 'https://dribbble.com/Lemmyux'],
-    ['Resume', 'https://drive.google.com/file/d/1aKHTNvx0FsJgjQCnflHkWIIyESehs_f0/view?usp=drive_link'],
+    ['Resume', 'https://drive.google.com/file/d/1hpJ2zn5YuUpvKHD7mGFzb8Z8GHCR7i0d/view?usp=sharing'],
   ],
 };

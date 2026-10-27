@@ -14,7 +14,7 @@ const projects = require('./content.js');
 const booking = require('./booking.js');
 const about = require('./about.js');
 const gallery = require('./gallery.js');
-const RESUME = 'https://drive.google.com/file/d/1aKHTNvx0FsJgjQCnflHkWIIyESehs_f0/view?usp=drive_link';
+const RESUME = 'https://drive.google.com/file/d/1hpJ2zn5YuUpvKHD7mGFzb8Z8GHCR7i0d/view?usp=sharing';
 
 const SITES = {
   a: { page: 'lemmy-portfolio-a.html', work: '#work', about: 'about.html', panelBg: 'var(--panel)', panelRadius: '10px', panelBorder: 'transparent', chipRadius: '2px', btnRadius: '4px', wordmark: 600 },
