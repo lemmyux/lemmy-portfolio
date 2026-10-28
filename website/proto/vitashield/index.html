@@ -20,7 +20,7 @@
   --blue: #0b7ff5;
   --blue-l: #4da3ff;
   --line: #2a2a2a;
-  --card: #161616;
+  --card: #141414;
   --sans: "Inter", system-ui, sans-serif;
   --display: "Inter Tight", "Inter", system-ui, sans-serif;
 }
@@ -105,19 +105,18 @@ section, header, footer { position: relative; width: 1440px; }
 .wire { fill: none; stroke: #3f86d8; stroke-width: 2; stroke-linecap: round; stroke-dasharray: var(--len); stroke-dashoffset: var(--len); transition: stroke-dashoffset 1.4s cubic-bezier(.4,.1,.2,1); }
 .who.in .wire { stroke-dashoffset: 0; }
 .pulse { fill: none; stroke: #b9e0ff; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 18 600; opacity: 0; filter: drop-shadow(0 0 4px #4da3ff); }
-.who.in .pulse { opacity: 1; animation: pulse 2.6s linear infinite; }
-@keyframes pulse { from { stroke-dashoffset: 618; } to { stroke-dashoffset: 0; } }
+.who.in .pulse { opacity: 1; }
 .tag { position: absolute; height: 55px; display: flex; align-items: center; justify-content: center; padding: 0 14px; background: rgba(0,0,0,.6); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); font-size: 12px; line-height: 15px; letter-spacing: -0.02em; text-align: center; cursor: default; opacity: 0; transform: scale(.94); transition: opacity .6s, transform .6s, box-shadow .3s, background-color .3s; }
 .who.in .tag { opacity: 1; transform: none; }
 .tag::before, .tag::after { content: ""; position: absolute; left: -2px; right: -2px; height: 9px; border: 2px solid var(--c); pointer-events: none; transition: left .3s, right .3s; }
 .tag::before { top: -2px; border-bottom: 0; clip-path: polygon(0 0, 14px 0, 14px 100%, 0 100%, 0 0, 100% 0, 100% 100%, calc(100% - 14px) 100%, calc(100% - 14px) 0); }
 .tag::after { bottom: -2px; border-top: 0; clip-path: polygon(0 0, 14px 0, 14px 100%, 0 100%, 0 0, 100% 0, 100% 100%, calc(100% - 14px) 100%, calc(100% - 14px) 0); }
-.tag:hover, .tag.hot { background: color-mix(in srgb, var(--c) 14%, #000); box-shadow: 0 0 24px color-mix(in srgb, var(--c) 35%, transparent); }
-.tag:hover::before, .tag:hover::after, .tag.hot::before, .tag.hot::after { left: -6px; right: -6px; }
+.tag:hover, .tag.hot, .tag.hit { background: color-mix(in srgb, var(--c) 14%, #000); box-shadow: 0 0 24px color-mix(in srgb, var(--c) 35%, transparent); }
+.tag:hover::before, .tag:hover::after, .tag.hot::before, .tag.hot::after, .tag.hit::before, .tag.hit::after { left: -6px; right: -6px; }
 .hub { position: absolute; width: 36px; height: 36px; display: grid; place-items: center; background: #0b1a2e; border: 1px solid #2f73d0; border-radius: 6px; color: #4b9cff; cursor: pointer; opacity: 0; transition: opacity .6s .4s, transform .25s, box-shadow .25s; }
 .who.in .hub { opacity: 1; }
 .hub svg { width: 16px; height: 16px; }
-.hub:hover, .hub.hot { transform: scale(1.12); box-shadow: 0 0 0 4px rgba(75,156,255,.18), 0 0 20px rgba(75,156,255,.5); }
+.hub:hover, .hub.hot, .hub.hit { transform: scale(1.12); box-shadow: 0 0 0 4px rgba(75,156,255,.18), 0 0 20px rgba(75,156,255,.5); }
 
 /* ---------- Value proposition ---------- */
 .value { height: 660px; }
@@ -132,10 +131,19 @@ section, header, footer { position: relative; width: 1440px; }
 .value.unlocked .shackle { transform: translateY(-30px); filter: drop-shadow(0 0 10px rgba(142,245,192,.6)) brightness(1.4); }
 .lockglow { position: absolute; left: 609px; top: 172px; width: 221px; height: 203px; border-radius: 26px; z-index: 2; pointer-events: none; transition: box-shadow .4s; }
 .value.unlocked .lockglow { box-shadow: inset 0 0 0 2px #8ef5c0, 0 0 40px rgba(142,245,192,.3); }
-.key { position: absolute; z-index: 3; width: 52px; height: 52px; padding: 0; border: 0; background: none; cursor: pointer; mix-blend-mode: screen; clip-path: polygon(50% 2%, 96% 26%, 96% 74%, 50% 98%, 4% 74%, 4% 26%); transition: background-color .2s; }
-.key:hover { background: rgba(255,255,255,.08); }
-.key.on { background: rgba(142,245,192,.55); }
-.value.unlocked .key { background: rgba(142,245,192,.16); }
+.key { position: absolute; z-index: 3; width: 52px; height: 52px; padding: 0; border: 0; background: none; cursor: pointer; }
+.key svg { position: absolute; inset: 0; width: 52px; height: 52px; overflow: visible; }
+.key path { fill: transparent; stroke: transparent; stroke-width: 2; transition: fill .2s, stroke .2s; }
+.key text { font-family: var(--display); font-size: 26px; fill: transparent; transition: fill .2s; }
+.key:hover path { stroke: #5a5a5a; }
+.key:hover text { fill: #9a9a9a; }
+.key.on path { fill: #8ef5c0; stroke: #8ef5c0; }
+.key.on text { fill: #000; }
+.value.unlocked .key path { fill: #0d0d0d; stroke: #2f6b50; }
+.value.unlocked .key text { fill: #8ef5c0; }
+.dimmer { position: absolute; z-index: 2; pointer-events: none; overflow: visible; }
+.dimmer circle { fill: #000; opacity: 0; animation: dim 2.4s ease-in-out infinite; }
+@keyframes dim { 0%, 100% { opacity: 0; } 50% { opacity: .72; } }
 .code { position: absolute; left: 0; right: 0; top: 392px; display: flex; justify-content: center; gap: 10px; }
 .code i { width: 22px; height: 3px; background: #2b2b2b; transition: background-color .2s; }
 .code i.f { background: #8ef5c0; }
@@ -165,8 +173,41 @@ section, header, footer { position: relative; width: 1440px; }
 .card:hover, .card.hot { transform: translateY(-4px); box-shadow: inset 0 0 0 1px rgba(75,156,255,.7), 0 18px 50px rgba(0,0,0,.5); }
 .card:hover::before, .card.hot::before { opacity: 1; }
 .card:hover .corner, .card.hot .corner { border-color: #4b9cff; width: 28px; height: 30px; }
-.card .art { position: absolute; z-index: 1; transition: transform .5s cubic-bezier(.2,.7,.2,1), filter .5s; }
-.card:hover .art, .card.hot .art { transform: translateY(-6px); filter: brightness(1.7) drop-shadow(0 0 12px rgba(75,156,255,.45)); }
+.card { cursor: pointer; }
+/* Card illustrations: SVG redrawn from the design render so each part can animate (as in the first build). */
+.card .art { position: absolute; z-index: 1; overflow: visible; }
+.art .ln { fill: none; stroke: #3d3d3d; stroke-width: 2; transition: stroke .3s; }
+.art .nd { fill: #3d3d3d; transition: fill .3s; transform-box: fill-box; transform-origin: center; }
+.card:hover .art .ln, .card.hot .art .ln { stroke: #5f88b8; }
+.card:hover .art .nd, .card.hot .art .nd { fill: #8fc3ff; animation: nd 1.4s ease-in-out infinite; }
+.card:hover .art .nd:nth-of-type(2n), .card.hot .art .nd:nth-of-type(2n) { animation-delay: .35s; }
+.card:hover .art .nd:nth-of-type(3n), .card.hot .art .nd:nth-of-type(3n) { animation-delay: .7s; }
+@keyframes nd { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.35); } }
+.card:hover .art .flowln, .card.hot .art .flowln { stroke-dasharray: 6 5; animation: dash 1s linear infinite; }
+@keyframes dash { to { stroke-dashoffset: -22; } }
+.art .spin { transform-box: fill-box; transform-origin: center; transition: transform 1.2s cubic-bezier(.2,.7,.2,1); }
+.card:hover .art .spin, .card.hot .art .spin { transform: rotate(60deg); }
+.art .hexring { fill: #3d3d3d; transition: fill .3s; }
+.art .hexfill { fill: #a9a9a9; transition: fill .3s; }
+.card:hover .art .hexring, .card.hot .art .hexring { fill: #26476b; }
+.card:hover .art .hexfill, .card.hot .art .hexfill { fill: #cfe6ff; }
+.art .cube { transform-box: fill-box; transform-origin: center; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+.card:hover .art .cube, .card.hot .art .cube { transform: scale(1.08); }
+.art .sq { transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+.card:hover .art .sq.a, .card.hot .art .sq.a { transform: translate(-8px, 8px); }
+.card:hover .art .sq.b, .card.hot .art .sq.b { transform: translate(8px, -8px); }
+.art .orange { fill: #ffa203; }
+.card:hover .art .orange, .card.hot .art .orange { animation: blink .8s steps(1) infinite; }
+@keyframes blink { 50% { fill: #ffd28a; } }
+.art .yellow { fill: #eeff25; }
+.art .white { fill: #fff; }
+.art .up { fill: none; stroke: #3d3d3d; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: stroke .3s; }
+.card:hover .art .up, .card.hot .art .up { stroke: #9a9a9a; animation: rise 1.2s ease-in-out infinite; }
+.card:hover .art .up:nth-of-type(2), .card.hot .art .up:nth-of-type(2) { animation-delay: .15s; }
+.card:hover .art .up:nth-of-type(3), .card.hot .art .up:nth-of-type(3) { animation-delay: .3s; }
+.card:hover .art .up:nth-of-type(4), .card.hot .art .up:nth-of-type(4) { animation-delay: .45s; }
+.card:hover .art .up:nth-of-type(5), .card.hot .art .up:nth-of-type(5) { animation-delay: .6s; }
+@keyframes rise { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 .card .txt { position: absolute; left: 16px; right: 16px; top: var(--t); }
 .card h3 { position: relative; margin: 0; font-family: var(--display); font-weight: 500; font-size: 22px; line-height: 28px; letter-spacing: -0.025em; }
 .card p { position: relative; margin: 14px 0 0; font-size: 13px; line-height: 21.5px; color: #9c9c9c; }
@@ -256,27 +297,27 @@ section, header, footer { position: relative; width: 1440px; }
   <button class="btn white reveal" type="button">Demo request <svg class="arrow"><use href="#arrow"/></svg></button>
   <svg class="wires" viewBox="0 0 1440 926" aria-hidden="true">
     <g id="wireset">
-      <path data-k="a" d="M105 301 H182"/>
-      <path data-k="a" d="M300 330 V403"/>
-      <path data-k="b" d="M300 439 V503 Q300 527 324 527 H365"/>
-      <path data-k="b" d="M588 527 H612 Q636 527 636 551 V788"/>
-      <path data-k="c" d="M1210 289 H1300"/>
-      <path data-k="c" d="M1118 317 V410"/>
-      <path data-k="d" d="M1118 446 V489 Q1118 513 1094 513 H1034"/>
-      <path data-k="d" d="M770 513 H742 Q718 513 718 537 V728"/>
-      <path data-k="e" d="M718 764 V788"/>
+      <path data-k="a" data-to=".tag.ka" d="M105 301 H182"/>
+      <path data-k="a" data-to=".tag.ka" d="M300 403 V330"/>
+      <path data-k="b" data-to=".tag.kb" d="M300 439 V503 Q300 527 324 527 H365"/>
+      <path data-k="b" data-to=".tag.ke" d="M588 527 H612 Q636 527 636 551 V788"/>
+      <path data-k="c" data-to=".tag.kc" d="M1300 289 H1210"/>
+      <path data-k="c" data-to=".tag.kc" d="M1118 410 V317"/>
+      <path data-k="d" data-to=".tag.kd" d="M1118 446 V489 Q1118 513 1094 513 H1034"/>
+      <path data-k="d" data-to=".hub.h5" d="M770 513 H742 Q718 513 718 537 V728"/>
+      <path data-k="e" data-to=".tag.ke" d="M718 764 V788"/>
     </g>
   </svg>
-  <div class="tag" data-k="a" style="--c:#ff6b6b; left:182px; top:274px; width:201px">Regulated Fintechs &amp; Digital Asset Firms</div>
-  <div class="tag" data-k="b" style="--c:#d8f59b; left:365px; top:500px; width:223px">Enterprises Deploying LLM Agents Internally</div>
-  <div class="tag" data-k="c" style="--c:#5ef0b0; left:990px; top:262px; width:220px">Web3 Protocols And Infrastructure Providers</div>
-  <div class="tag" data-k="d" style="--c:#8fb6ff; left:770px; top:486px; width:264px">AI Startups Operating Under Compliance Constraints</div>
-  <div class="tag" data-k="e" style="--c:#ffa531; left:587px; top:788px; width:265px">Security, Compliance, And Platform Engineering Teams</div>
+  <div class="tag ka" data-k="a" style="--c:#ff6b6b; left:182px; top:274px; width:201px">Regulated Fintechs &amp; Digital Asset Firms</div>
+  <div class="tag kb" data-k="b" style="--c:#d8f59b; left:365px; top:500px; width:223px">Enterprises Deploying LLM Agents Internally</div>
+  <div class="tag kc" data-k="c" style="--c:#5ef0b0; left:990px; top:262px; width:220px">Web3 Protocols And Infrastructure Providers</div>
+  <div class="tag kd" data-k="d" style="--c:#8fb6ff; left:770px; top:486px; width:264px">AI Startups Operating Under Compliance Constraints</div>
+  <div class="tag ke" data-k="e" style="--c:#ffa531; left:587px; top:788px; width:265px">Security, Compliance, And Platform Engineering Teams</div>
   <button class="hub" type="button" data-k="a" style="left:69px; top:283px" aria-label="Fintech connection"><svg><use href="#bolt"/></svg></button>
   <button class="hub" type="button" data-k="a" style="left:282px; top:403px" aria-label="Fintech connection"><svg><use href="#bolt"/></svg></button>
   <button class="hub" type="button" data-k="c" style="left:1300px; top:269px" aria-label="Protocol connection"><svg><use href="#bolt"/></svg></button>
   <button class="hub" type="button" data-k="c" style="left:1100px; top:410px" aria-label="Protocol connection"><svg><use href="#bolt"/></svg></button>
-  <button class="hub" type="button" data-k="e" style="left:700px; top:728px" aria-label="Security team connection"><svg><use href="#bolt"/></svg></button>
+  <button class="hub h5" type="button" data-k="e" style="left:700px; top:728px" aria-label="Security team connection"><svg><use href="#bolt"/></svg></button>
 </section>
 
 <!-- Value proposition -->
@@ -289,6 +330,7 @@ section, header, footer { position: relative; width: 1440px; }
   <div class="code" id="code"><i></i><i></i><i></i><i></i></div>
   <div class="code-hint">Tap the keypad</div>
   <div class="cells" id="cells"></div>
+  <svg class="dimmer yellow" viewBox="0 0 140 180" style="left:1300px;top:-19px;width:140px;height:180px" aria-hidden="true"><circle cx="92.5" cy="24.4" r="4.5" style="animation-delay:0.00s;animation-duration:2.00s"/><circle cx="135.1" cy="29.5" r="6.1" style="animation-delay:-1.89s;animation-duration:2.45s"/><circle cx="109.5" cy="31.5" r="5.7" style="animation-delay:-0.81s;animation-duration:2.90s"/><circle cx="84.3" cy="34.3" r="6.1" style="animation-delay:-2.70s;animation-duration:3.35s"/><circle cx="59.1" cy="36.2" r="5.7" style="animation-delay:-1.62s;animation-duration:2.00s"/><circle cx="127.6" cy="42.5" r="5.7" style="animation-delay:-0.54s;animation-duration:2.45s"/><circle cx="101.6" cy="44.9" r="5.7" style="animation-delay:-2.43s;animation-duration:2.90s"/><circle cx="119.3" cy="55.9" r="6.1" style="animation-delay:-1.35s;animation-duration:3.35s"/><circle cx="42.9" cy="63.0" r="6.1" style="animation-delay:-0.27s;animation-duration:2.00s"/><circle cx="135.5" cy="66.9" r="5.7" style="animation-delay:-2.16s;animation-duration:2.45s"/><circle cx="85.8" cy="71.3" r="6.1" style="animation-delay:-1.08s;animation-duration:2.90s"/><circle cx="59.9" cy="73.6" r="6.1" style="animation-delay:0.00s;animation-duration:3.35s"/><circle cx="103.2" cy="82.3" r="6.1" style="animation-delay:-1.89s;animation-duration:2.00s"/><circle cx="77.6" cy="84.7" r="6.1" style="animation-delay:-0.81s;animation-duration:2.45s"/><circle cx="51.6" cy="87.0" r="6.1" style="animation-delay:-2.70s;animation-duration:2.90s"/><circle cx="69.7" cy="98.0" r="6.1" style="animation-delay:-1.62s;animation-duration:3.35s"/><circle cx="43.3" cy="100.0" r="5.7" style="animation-delay:-0.54s;animation-duration:2.00s"/><circle cx="112.2" cy="105.9" r="6.1" style="animation-delay:-2.43s;animation-duration:2.45s"/><circle cx="87.0" cy="108.7" r="6.1" style="animation-delay:-1.35s;animation-duration:2.90s"/><circle cx="61.0" cy="111.0" r="5.7" style="animation-delay:-0.27s;animation-duration:3.35s"/><circle cx="129.9" cy="116.9" r="6.1" style="animation-delay:-2.16s;animation-duration:2.00s"/><circle cx="104.3" cy="119.3" r="6.1" style="animation-delay:-1.08s;animation-duration:2.45s"/><circle cx="78.8" cy="121.7" r="6.1" style="animation-delay:0.00s;animation-duration:2.90s"/><circle cx="52.8" cy="124.4" r="5.7" style="animation-delay:-1.89s;animation-duration:3.35s"/><circle cx="96.1" cy="132.3" r="5.7" style="animation-delay:-0.81s;animation-duration:2.00s"/><circle cx="70.1" cy="135.1" r="6.1" style="animation-delay:-2.70s;animation-duration:2.45s"/><circle cx="62.6" cy="147.7" r="6.1" style="animation-delay:-1.62s;animation-duration:2.90s"/></svg>
   <div class="value-copy">
     <h2 class="reveal">Value Proposition</h2>
     <p class="reveal">As blockchain dApps and AI agents become critical infrastructure, security can't be an afterthought. Our platform provides continuous security validation for smart contracts and runtime governance for AI agents purpose-built for teams that can't afford vulnerabilities or compliance failures.</p>
@@ -305,42 +347,42 @@ section, header, footer { position: relative; width: 1440px; }
 
   <article class="card reveal" style="left:100px; top:237px">
     <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
-    <img class="art" src="art/card1.png" alt="" style="left:79.0px;top:34.0px;width:212.0px;height:170.0px">
+    <svg class="art" viewBox="0 0 212 170" style="left:79.0px;top:34.0px;width:212.0px;height:170.0px" aria-hidden="true"><path class="ln sq a" d="M7 25 V13.4 H112.6 V25"/><path class="ln" d="M7 25.2 H197.7 V155.4 H7 Z"/><path class="ln sq b" d="M131 155.4 V166.2 H197.7 V155"/><g class="cube"><path class="ln" d="M103.2 46.1 L65.4 67.3"/><path class="ln" d="M103.2 46.1 L138.2 67.7"/><path class="ln" d="M65.4 67.3 L103.2 89.0"/><path class="ln" d="M65.4 67.3 L65.4 110.3"/><path class="ln" d="M138.2 67.7 L103.2 89.0"/><path class="ln" d="M138.2 67.7 L138.2 110.3"/><path class="ln" d="M103.2 89.0 L103.2 131.1"/><path class="ln" d="M65.4 110.3 L103.2 131.1"/><path class="ln" d="M138.2 110.3 L103.2 131.1"/><rect class="nd" x="97.7" y="40.6" width="11.0" height="11.0"/><rect class="nd" x="59.9" y="61.8" width="11.0" height="11.0"/><rect class="nd" x="132.7" y="62.2" width="11.0" height="11.0"/><rect class="nd" x="97.7" y="83.5" width="11.0" height="11.0"/><rect class="nd" x="59.9" y="104.8" width="11.0" height="11.0"/><rect class="nd" x="132.7" y="104.8" width="11.0" height="11.0"/><rect class="nd" x="97.7" y="125.6" width="11.0" height="11.0"/></g><rect class="nd" x="192.2" y="17.7" width="11.0" height="11.0"/><rect class="nd" x="192.2" y="148.5" width="11.0" height="11.0"/></svg>
     <div class="txt" style="--t:223px"><h3>SOC 2–Aligned Security Framework</h3>
     <p>Vitashield follows a SOC 2–aligned security program designed to protect customer data and system integrity across the full lifecycle of blockchain and AI operations. Our controls cover access management, incident response, change management, and operational resilience, ensuring our platform meets enterprise-grade expectations for confidentiality, integrity, and availability.</p></div>
   </article>
 
   <article class="card reveal" style="left:534px; top:241px">
     <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
-    <img class="art" src="art/card2.png" alt="" style="left:89.2px;top:35.0px;width:176.6px;height:176.6px">
+    <svg class="art" viewBox="0 0 176.6 176.6" style="left:89.2px;top:35.0px;width:176.6px;height:176.6px" aria-hidden="true"><path class="ln flowln" d="M26 15.4 H149.2 M164.2 29.1 V153.2 M148.1 167.8 H25.6 M11.8 153.6 V31.1"/><path class="ln flowln in" d="M53.9 55.6 H120.5 V126.8 H53.9 Z"/><circle class="nd" cx="26" cy="15.4" r="4.6"/><circle class="nd" cx="149.2" cy="15.4" r="4.6"/><circle class="nd" cx="164.2" cy="29.1" r="4.6"/><circle class="nd" cx="164.2" cy="153.2" r="4.6"/><circle class="nd" cx="148.1" cy="167.8" r="4.6"/><circle class="nd" cx="25.6" cy="167.8" r="4.6"/><circle class="nd" cx="11.8" cy="153.6" r="4.6"/><circle class="nd" cx="11.8" cy="31.1" r="4.6"/><circle class="nd" cx="53.9" cy="55.6" r="4.6"/><circle class="nd" cx="120.5" cy="55.6" r="4.6"/><circle class="nd" cx="53.9" cy="126.8" r="4.6"/><circle class="nd" cx="120.5" cy="126.8" r="4.6"/><rect class="nd" x="84.0" y="11.6" width="7.6" height="7.6"/><rect class="nd" x="160.4" y="87.9" width="7.6" height="7.6"/><rect class="nd" x="84.0" y="164.0" width="7.6" height="7.6"/><rect class="nd" x="8.0" y="87.9" width="7.6" height="7.6"/><rect class="nd" x="84.0" y="51.8" width="7.6" height="7.6"/><rect class="nd" x="116.5" y="87.9" width="7.6" height="7.6"/><rect class="nd" x="50.5" y="87.9" width="7.6" height="7.6"/></svg>
     <div class="txt" style="--t:223px"><h3>Secure Development &amp; Deployment Pipeline</h3>
     <p>Security is embedded into our engineering process. All code changes pass through automated testing, peer review, and vulnerability scanning before deployment. Our deployment pipeline ensures reproducibility, auditability, and rollback safety</p></div>
   </article>
 
   <article class="card reveal" style="left:969px; top:241px">
     <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
-    <img class="art" src="art/card3.png" alt="" style="left:101.2px;top:15.9px;width:167.6px;height:187.5px">
+    <svg class="art" viewBox="0 0 167.6 187.5" style="left:101.2px;top:15.9px;width:167.6px;height:187.5px" aria-hidden="true"><g class="spin"><path class="ln" d="M83.5 18.9 L153.6 57.9 L153.6 138.2 L83.1 176.8 L13.4 138.2 L13.4 57.1 Z"/><path class="ln" d="M83.5 18.9 L84.7 96.9"/><path class="ln" d="M153.6 57.9 L84.7 96.9"/><path class="ln" d="M153.6 138.2 L84.7 96.9"/><path class="ln" d="M83.1 176.8 L84.7 96.9"/><path class="ln" d="M13.4 138.2 L84.7 96.9"/><path class="ln" d="M13.4 57.1 L84.7 96.9"/><polygon class="nd" points="83.5,13.3 88.3,16.1 88.3,21.7 83.5,24.5 78.7,21.7 78.7,16.1"/><polygon class="nd" points="153.6,52.3 158.4,55.1 158.4,60.7 153.6,63.5 148.8,60.7 148.8,55.1"/><polygon class="nd" points="153.6,132.6 158.4,135.4 158.4,141.0 153.6,143.8 148.8,141.0 148.8,135.4"/><polygon class="nd" points="83.1,171.2 87.9,174.0 87.9,179.6 83.1,182.4 78.3,179.6 78.3,174.0"/><polygon class="nd" points="13.4,132.6 18.2,135.4 18.2,141.0 13.4,143.8 8.6,141.0 8.6,135.4"/><polygon class="nd" points="13.4,51.5 18.2,54.3 18.2,59.9 13.4,62.7 8.6,59.9 8.6,54.3"/></g><polygon class="hexring" points="84.7,64.5 112.8,80.7 112.8,113.1 84.7,129.3 56.6,113.1 56.6,80.7"/><polygon class="hexfill" points="84.7,74.4 104.2,85.7 104.2,108.2 84.7,119.4 65.2,108.2 65.2,85.7"/></svg>
     <div class="txt" style="--t:222px"><h3>Independent Security Assessments</h3>
     <p>Vitashield undergoes regular third-party audits and penetration testing to validate our security posture. External security experts continuously challenge our assumptions and defenses, helping us maintain a platform that meets the expectations of financial institutions.</p></div>
   </article>
 
   <article class="card reveal" style="left:100px; top:765px">
     <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
-    <img class="art" src="art/card4.png" alt="" style="left:86.7px;top:17.5px;width:196.5px;height:176.0px">
+    <svg class="art" viewBox="0 0 196.5 176" style="left:86.7px;top:17.5px;width:196.5px;height:176.0px" aria-hidden="true"><path class="ln flowln" d="M58.7 20.5 L122.5 33.9"/><path class="ln flowln" d="M58.7 20.5 L182.3 86.2"/><path class="ln flowln" d="M58.7 20.5 L18.1 126.4"/><path class="ln flowln" d="M122.5 33.9 L170.9 53.9"/><path class="ln flowln" d="M122.5 33.9 L89.4 87.4"/><path class="ln flowln" d="M122.5 33.9 L176.8 106.7"/><path class="ln flowln" d="M122.5 33.9 L115.8 162.6"/><path class="ln flowln" d="M170.9 53.9 L52.0 76.8"/><path class="ln flowln" d="M170.9 53.9 L182.3 86.2"/><path class="ln flowln" d="M170.9 53.9 L121.7 126.4"/><path class="ln flowln" d="M52.0 76.8 L89.4 87.4"/><path class="ln flowln" d="M52.0 76.8 L18.1 126.4"/><path class="ln flowln" d="M52.0 76.8 L115.8 162.6"/><path class="ln flowln" d="M182.3 86.2 L176.8 106.7"/><path class="ln flowln" d="M182.3 86.2 L18.1 126.4"/><path class="ln flowln" d="M89.4 87.4 L176.8 106.7"/><path class="ln flowln" d="M89.4 87.4 L18.1 126.4"/><path class="ln flowln" d="M89.4 87.4 L115.8 162.6"/><path class="ln flowln" d="M176.8 106.7 L121.7 126.4"/><path class="ln flowln" d="M176.8 106.7 L115.8 162.6"/><path class="ln flowln" d="M18.1 126.4 L121.7 126.4"/><path class="ln flowln" d="M121.7 126.4 L115.8 162.6"/><rect class="nd" x="51.2" y="13.0" width="15.0" height="15.0"/><rect class="nd" x="115.0" y="26.4" width="15.0" height="15.0"/><rect class="nd" x="163.4" y="46.4" width="15.0" height="15.0"/><rect class="nd" x="47.0" y="71.8" width="10.0" height="10.0"/><rect class="nd" x="177.3" y="81.2" width="10.0" height="10.0"/><rect class="nd" x="81.9" y="79.9" width="15.0" height="15.0"/><rect class="nd" x="169.3" y="99.2" width="15.0" height="15.0"/><rect class="nd" x="10.6" y="118.9" width="15.0" height="15.0"/><rect class="nd" x="116.7" y="121.4" width="10.0" height="10.0"/><rect class="nd" x="108.3" y="155.1" width="15.0" height="15.0"/></svg>
     <div class="txt" style="--t:209px"><h3>Hardened Infrastructure By Design</h3>
     <p>Vitashield infrastructure is built on hardened cloud architecture with strict network segmentation, least-privilege access controls, and continuous monitoring. Every component is deployed using secure-by-default configurations to minimize attack surfaces and prevent unauthorized system interactions — critical for autonomous blockchain and AI workloads.</p></div>
   </article>
 
   <article class="card reveal" style="left:534px; top:765px">
     <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
-    <img class="art" src="art/card5.png" alt="" style="left:102.9px;top:17.5px;width:164.3px;height:169.6px">
+    <svg class="art" viewBox="0 0 164.3 169.6" style="left:102.9px;top:17.5px;width:164.3px;height:169.6px" aria-hidden="true"><g class="sq b"><path class="ln" d="M50.4 19.7 H149.6 V117.3 H50.4 Z"/><rect class="nd" x="140.9" y="12.2" width="15.0" height="15.0"/></g><path class="ln" d="M33.1 39.4 H131.5 V137 H33.1 Z"/><g class="sq a"><path class="ln" d="M15.8 59.9 H114.4 V157.5 H15.8 Z"/><rect class="nd" x="8.6" y="150.0" width="15.0" height="15.0"/></g><rect class="orange" x="73.9" y="79.8" width="16.0" height="16.0"/></svg>
     <div class="txt" style="--t:209px"><h3>Continuous Monitoring &amp; Threat Detection</h3>
     <p>We operate real-time security monitoring across infrastructure and platform layers. Automated anomaly detection identifies unusual behavior in smart contracts, AI agents, and system activity before it escalates. This allows us to respond proactively to threats instead of reacting after damage occurs.</p></div>
   </article>
 
   <article class="card reveal" style="left:969px; top:765px">
     <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
-    <img class="art" src="art/card6.png" alt="" style="left:87.6px;top:17.5px;width:194.9px;height:176.9px">
+    <svg class="art" viewBox="0 0 194.9 176.9" style="left:87.6px;top:17.5px;width:194.9px;height:176.9px" aria-hidden="true"><rect class="nd" x="36.0" y="12.4" width="17.0" height="17.0"/><rect class="nd" x="88.8" y="46.6" width="17.0" height="17.0"/><rect class="white" x="138.7" y="11.9" width="18.0" height="18.0"/><path class="ln" d="M27 91 H168"/><rect class="yellow" x="7.3" y="81.0" width="20.0" height="20.0"/><rect class="yellow" x="168.0" y="81.0" width="20.0" height="20.0"/><g><path class="up" d="M53.6 125 V91.5 M47.1 98.0 L53.6 91.5 L60.1 98.0"/><path class="up" d="M89 151 V116.6 M82.5 123.1 L89 116.6 L95.5 123.1"/><path class="up" d="M128.6 140 V107 M122.1 113.5 L128.6 107 L135.1 113.5"/><path class="up" d="M45 173.3 V139.4 M38.5 145.9 L45 139.4 L51.5 145.9"/><path class="up" d="M155.7 173.3 V139.4 M149.2 145.9 L155.7 139.4 L162.2 145.9"/></g></svg>
     <div class="txt" style="--t:208px"><h3>Governance, Compliance &amp; Audit Readiness</h3>
     <p>We design our systems for audit transparency. Detailed logging, immutable audit trails, and policy-driven access governance allow organizations to meet regulatory and compliance requirements with confidence.</p></div>
   </article>
@@ -356,7 +398,7 @@ section, header, footer { position: relative; width: 1440px; }
     <div><h4>Ecosystem</h4><a href="#foot">Terms &amp; Conditions</a><a href="#foot">Cookie Policy</a></div>
     <div><h4>Connect</h4><a href="#foot">X(Twitter)</a><a href="#foot">LinkedIn</a></div>
   </div>
-  <div class="mark"><img src="art/foot-mark.png" alt="Vitashield" width="1016" height="171"><i class="shine" aria-hidden="true"></i></div>
+  <div class="mark"><img src="art/foot-mark.png" alt="Vitashield" width="1016" height="171"><svg class="dimmer shieldots" viewBox="0 0 150 171" style="left:0px;top:0px;width:150px;height:171px" aria-hidden="true"><circle cx="64.2" cy="15.0" r="4.3" style="animation-delay:0.00s;animation-duration:2.00s"/><circle cx="82.3" cy="15.0" r="4.3" style="animation-delay:-1.89s;animation-duration:2.45s"/><circle cx="31.1" cy="35.8" r="7.9" style="animation-delay:-0.81s;animation-duration:2.90s"/><circle cx="55.1" cy="36.2" r="7.5" style="animation-delay:-2.70s;animation-duration:3.35s"/><circle cx="91.7" cy="36.2" r="7.5" style="animation-delay:-1.62s;animation-duration:2.00s"/><circle cx="115.8" cy="36.2" r="7.5" style="animation-delay:-0.54s;animation-duration:2.45s"/><circle cx="9.8" cy="39.4" r="4.3" style="animation-delay:-2.43s;animation-duration:2.90s"/><circle cx="137.0" cy="39.4" r="4.3" style="animation-delay:-1.35s;animation-duration:3.35s"/><circle cx="58.7" cy="57.1" r="4.8" style="animation-delay:-0.27s;animation-duration:2.00s"/><circle cx="88.6" cy="57.5" r="4.3" style="animation-delay:-2.16s;animation-duration:2.45s"/><circle cx="31.1" cy="66.2" r="7.5" style="animation-delay:-1.08s;animation-duration:2.90s"/><circle cx="115.8" cy="66.5" r="7.9" style="animation-delay:0.00s;animation-duration:3.35s"/><circle cx="10.2" cy="69.3" r="4.3" style="animation-delay:-1.89s;animation-duration:2.00s"/><circle cx="137.0" cy="69.3" r="4.3" style="animation-delay:-0.81s;animation-duration:2.45s"/><circle cx="58.7" cy="81.1" r="4.3" style="animation-delay:-2.70s;animation-duration:2.90s"/><circle cx="87.4" cy="81.1" r="5.1" style="animation-delay:-1.62s;animation-duration:3.35s"/><circle cx="34.3" cy="93.7" r="4.3" style="animation-delay:-0.54s;animation-duration:2.00s"/><circle cx="112.6" cy="93.7" r="4.3" style="animation-delay:-2.43s;animation-duration:2.45s"/><circle cx="73.6" cy="96.9" r="7.5" style="animation-delay:-1.35s;animation-duration:2.90s"/><circle cx="9.8" cy="100.0" r="4.3" style="animation-delay:-0.27s;animation-duration:3.35s"/><circle cx="137.0" cy="100.0" r="4.3" style="animation-delay:-2.16s;animation-duration:2.00s"/><circle cx="34.3" cy="117.7" r="4.8" style="animation-delay:-1.08s;animation-duration:2.45s"/><circle cx="58.7" cy="118.1" r="4.3" style="animation-delay:0.00s;animation-duration:2.90s"/><circle cx="88.6" cy="118.1" r="4.3" style="animation-delay:-1.89s;animation-duration:3.35s"/><circle cx="112.6" cy="118.1" r="4.3" style="animation-delay:-0.81s;animation-duration:2.00s"/><circle cx="33.9" cy="135.5" r="4.3" style="animation-delay:-2.70s;animation-duration:2.45s"/><circle cx="58.3" cy="135.5" r="4.3" style="animation-delay:-1.62s;animation-duration:2.90s"/><circle cx="88.6" cy="135.8" r="4.8" style="animation-delay:-0.54s;animation-duration:3.35s"/><circle cx="112.6" cy="135.8" r="4.3" style="animation-delay:-2.43s;animation-duration:2.00s"/><circle cx="52.4" cy="154.0" r="4.0" style="animation-delay:-1.35s;animation-duration:2.45s"/><circle cx="94.5" cy="154.0" r="4.3" style="animation-delay:-0.27s;animation-duration:2.90s"/><circle cx="76.4" cy="166.2" r="4.3" style="animation-delay:-2.16s;animation-duration:3.35s"/></svg><i class="shine" aria-hidden="true"></i></div>
   <div class="track" aria-hidden="true"><div id="track"></div></div>
 </footer>
 
@@ -398,15 +440,30 @@ section, header, footer { position: relative; width: 1440px; }
   h1.innerHTML = h1.textContent.split(' ').map(function (w, i) { return '<span class="w" style="animation-delay:' + (.15 + i * .07) + 's">' + w + '</span>'; }).join(' ');
 
   // Who: measure wire lengths so they draw in, and add a light pulse on each.
-  var wires = document.getElementById('wireset');
+  var wires = document.getElementById('wireset'), who = document.getElementById('who');
   [].slice.call(wires.children).forEach(function (p, i) {
     var len = Math.ceil(p.getTotalLength());
     p.setAttribute('class', 'wire');
     p.style.setProperty('--len', len);
-    var pulse = el('path', { 'class': 'pulse', d: p.getAttribute('d'), 'data-k': p.dataset.k, style: 'animation-delay:' + (-i * .45) + 's' }, wires);
   });
+  // Light pulses travel along each wire; the box (or hub) at the end lights up as a pulse arrives.
+  var pulses = [].slice.call(wires.querySelectorAll('.wire')).map(function (p, i) {
+    var len = p.getTotalLength(), seg = 22;
+    var q = el('path', { 'class': 'pulse', d: p.getAttribute('d'), 'data-k': p.dataset.k }, wires);
+    q.style.strokeDasharray = seg + ' ' + (len + seg * 2);
+    return { el: q, len: len, seg: seg, cycle: len + 260, off: (i * 137) % (len + 260), last: 0, to: who.querySelector(p.dataset.to) };
+  });
+  function flash(n) { if (!n) return; n.classList.add('hit'); clearTimeout(n._hit); n._hit = setTimeout(function () { n.classList.remove('hit'); }, 650); }
+  (function tick(now) {
+    if (who.classList.contains('in')) pulses.forEach(function (u) {
+      var s = (now * .16 + u.off) % u.cycle;
+      u.el.style.strokeDashoffset = u.seg - Math.min(s, u.len + u.seg);
+      if (s >= u.len && u.last < u.len) flash(u.to);
+      u.last = s;
+    });
+    if (!reduce) requestAnimationFrame(tick);
+  })(0);
   // Hovering a group lights up its tags, hubs and wires together.
-  var who = document.getElementById('who');
   function hot(k, on) {
     who.querySelectorAll('[data-k="' + k + '"]').forEach(function (n) { n.classList.toggle('hot', on); if (n.tagName === 'path') n.style.stroke = on ? '#9fd2ff' : ''; });
   }
@@ -420,6 +477,7 @@ section, header, footer { position: relative; width: 1440px; }
   '734319286'.split('').forEach(function (n, i) {
     var b = document.createElement('button'); b.className = 'key'; b.type = 'button'; b.setAttribute('aria-label', 'Key ' + n); b.dataset.n = n;
     b.style.left = (635 + (i % 3) * 57.74) + 'px'; b.style.top = (196 + Math.floor(i / 3) * 51.74) + 'px';
+    b.innerHTML = '<svg viewBox="0 0 52 52" aria-hidden="true"><path d="M26 3 46 14.5v23L26 49 6 37.5v-23Z"/><text x="26" y="35" text-anchor="middle">' + n + '</text></svg>';
     b.addEventListener('click', function () { press(b); });
     pad.appendChild(b);
   });
@@ -439,6 +497,12 @@ section, header, footer { position: relative; width: 1440px; }
   // Footer: sliding mint track.
   var track = document.getElementById('track');
   [[-41,265],[398,265],[841,127],[1192,265]].forEach(function (p) { [0, 1440].forEach(function (o) { var t = document.createElement('i'); t.style.left = (p[0] + o) + 'px'; t.style.width = p[1] + 'px'; track.appendChild(t); }); });
+
+  // Cards: tap or click one to play its illustration (hover does the same on desktop).
+  var allCards = document.querySelectorAll('.card');
+  allCards.forEach(function (c) {
+    c.addEventListener('click', function () { var on = !c.classList.contains('hot'); allCards.forEach(function (o) { o.classList.remove('hot'); }); c.classList.toggle('hot', on); });
+  });
 
   // Nav dropdowns open on hover or click.
   document.querySelectorAll('.dd').forEach(function (dd) {
@@ -473,7 +537,7 @@ section, header, footer { position: relative; width: 1440px; }
   function cycle(list, each) { list.forEach(function (n, i) { setTimeout(function () { list.forEach(function (o) { o.classList.remove('hot'); }); n.classList.add('hot'); }, i * each); }); setTimeout(function () { list.forEach(function (o) { o.classList.remove('hot'); }); }, list.length * each); }
   var steps = [
     { to: function () { return 0; }, hold: 3600 },
-    { to: function () { return top('who') * scale; }, hold: 4200, run: function () { ['a', 'c', 'b', 'd', 'e'].forEach(function (k, i) { setTimeout(function () { hot(k, true); setTimeout(function () { hot(k, false); }, 700); }, 300 + i * 750); }); } },
+    { to: function () { return top('who') * scale; }, hold: 5200 },
     { to: function () { return (top('value') + 20) * scale; }, hold: 4200, run: function () { var keys = pad.querySelectorAll('.key'); [0, 4, 2, 6].forEach(function (k, i) { setTimeout(function () { press(keys[k]); }, 500 + i * 380); }); } },
     { to: function () { return (top('trust') + 150) * scale; }, hold: 3800, run: function () { cycle([cards[0], cards[1], cards[2]], 1100); } },
     { to: function () { return (top('trust') + 680) * scale; }, hold: 3800, run: function () { cycle([cards[3], cards[4], cards[5]], 1100); } },
